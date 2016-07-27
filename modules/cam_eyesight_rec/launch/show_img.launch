@@ -1,0 +1,4 @@
+<launch>
+    <node name="cam_eyesight_rec" pkg="cam_eyesight_rec" type="show_img" output="screen" 
+	ns="kc"/>
+</launch>

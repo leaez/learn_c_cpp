@@ -1,0 +1,5 @@
+<launch>
+    <node name="eyesight_node" pkg="eyesight_node" type="eyesight" output="screen" 
+	ns="kc"/>
+	<param name="cv_window" value="1" type="int" />
+</launch>

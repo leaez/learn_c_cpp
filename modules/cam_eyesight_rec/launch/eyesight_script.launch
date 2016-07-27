@@ -1,0 +1,4 @@
+<launch>
+    <node name="eyesight_node" pkg="eyesight_node" type="eyesight.py" output="screen" 
+	ns="kc"/>
+</launch>

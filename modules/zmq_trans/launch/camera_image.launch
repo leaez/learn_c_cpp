@@ -1,0 +1,8 @@
+<launch>
+    <node name="camera_image" pkg="camera_image" type="camera_image.py" output="screen" 
+	ns="kc"/>
+	<param name="pub_rate" value="20" type="int" />
+	<param name="video_num" value="0" type="int" />
+	<param name="gui" value="0" type="int" />
+	<param name="zmq_flag" value="1" type="int" />
+</launch>
