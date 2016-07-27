@@ -1,4 +1,11 @@
+# python 
+*.pyc
+*.swp
+*.py~
+
+
 # Compiled Object files
+
 *.slo
 *.lo
 *.o
