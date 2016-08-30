@@ -10,53 +10,12 @@
 #include <initializer_list>
 #include <random>
 #include <regex>
+#include <unordered_set>
 
 using namespace std;
 
-void use()
-{
-    ifstream in("file.txt"); // input file
-    if (!in) cerr << "no file\n";
-        //exit();
-      regex pat {"\\w{2}\\s*\\d{5}(-\\d{4})?"}; // U.S. postal code pattern
-    //regex pat {R"(\w{2}\s*\d{5}(-\d{4})?)"};
-    int lineno = 0;
-    for (string line; getline(in,line);) {
-        ++lineno;
-        cout << line << endl;
-        smatch matches; // matched strings go here
-    //    regex_search(line, matches, pat);
-    //    cout << matches[0]<< endl;
-    //    cout << matches[1]<< endl;
-    //    cout << matches[2]<< endl;
-    
 
-#if 1
-        if (regex_search(line, matches, pat)) {
-            cout << lineno << ": " << matches[0] << '\n'; // the complete match
-            if (1<matches.size() && matches[1].matched)
-                cout << "\t: " << matches[1] << '\n';// submatch
-        }
-    }
-#endif
-
-}
-
-void test1()
-{
-    string input {"x 1 y2 22 zaq 34567"};
-    regex pat {"(\\w+)\\s(\\d+)"}; // word space number
-    string format {"{$1,$2}\n"};
-    cout << regex_replace(input,pat,format);
-}
-
-void test()
-{
-    string input = "aa as; asd ++e^asdf asdfg";
-    regex pat {R"(\s+(\w+))"};
-    for (sregex_iterator p(input.begin(),input.end(),pat); p!=sregex_iterator{}; ++p)
-        cout << (*p)[1] << '\n';
-}
+/** regex */ 
 
 void test2()
 {
@@ -77,6 +36,7 @@ void test2()
  * */ 
 int main()
 {
+    /**  */ 
     vector<int> vi1 {1,3,5,7,9,7,5,3}; // vector initialized by five ints
     vector<string> vs(7); // vector initialized by sev en empty strings
     vector<int> vi2;
@@ -87,8 +47,7 @@ int main()
     
     //generate(begin(vi2),end(vi2),Randint{});
     for (auto& x : vi1) // implicit use of v.begin() and v.end()
-        cout << x << '\n';
-
+        cout << x ; cout << '\n';
 
     vi2.assign(&vi1[1],&vi1[4]); // assign the sequence 3,5,7 to vi2
     vector<string> vs2;
@@ -100,10 +59,34 @@ int main()
     //for (auto& x : vi2) // implicit use of v.begin() and v.end()
     //    cout << x << '\n';
 
-    /**  */ 
+    /** array  */ 
+    cout << "-----------------array\n";
+    std::array<int, 3> a2 = {1, 2, 3};
+    std::array<int, 3> a1 {1, 2, 3} ; //  in C++11 
     array<string, 4> aa = {"Churchill", "Clare"};
-    for (auto& x : aa) // implicit use of v.begin() and v.end()
+    for (auto& x : a1) // implicit use of v.begin() and v.end()
         cout << x << '\n';
+    cout << aa.size();
+
+    /** set */ 
+    std::unordered_set<int> example = {1, 2, 3, 4};
+    auto search = example.find(2);
+    if(search != example.end()) {
+        std::cout << "unordered set Found " << (*search) << '\n';
+    }
+
+    /** map emplace */ 
+    std::map<std::string, std::string> m;
+    m.emplace(std::make_pair(std::string("a"), std::string("a")));
+    m.emplace(std::make_pair("b", "abcd"));
+    m.emplace("d", "ddd");
+    // uses pair's piecewise constructor
+    m.emplace(std::piecewise_construct,
+              std::forward_as_tuple("c"),
+              std::forward_as_tuple(10, 'c'));
+    for (const auto &p : m) {
+        std::cout << p.first << " => " << p.second << '\n';
+    }
 
     /** string */
     string ss = "12345678";
@@ -122,23 +105,13 @@ int main()
     int n2= s.copy(const_cast<char*>(s2.c_str()),3,0);
     cout << s2 << "\n" <<  n2 <<endl;
     cout << s << endl;
-    /**  */ 
-    use();
-    regex pat ("(\\w{4})\\s{1}(\\w{4})?");
-    string rs = "AA 123456-45678";
-    smatch m;
-    regex_search(rs,m,pat);
-    cout << boolalpha;
-    cout << m[0].matched << m[0] << '\n'; // true: we found a match
-    cout << m[1] << m[1].matched << '\n'; // true: there was a first sub_match
-    cout << m[2] << m[2].matched << '\n'; // true: there was a first sub_match
-
-    test1();
-    test();
-
+    
+    /** regex */ 
+    /** osstream */ 
     test2();
-
-    for (int i; cin>>i && 0<i;)
-        cout << i << '\n';
+    //for (int i; cin>>i && 0<i;)
+    //    cout << i << '\n';
+    
+    /**  */ 
 
 }
