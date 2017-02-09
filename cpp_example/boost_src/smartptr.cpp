@@ -75,7 +75,7 @@ class some_class2 {
     bool another_function(double d) {std::cout<< "sig Fun called\n";return d<0.0;  }};
 
 int main() 
-{  
+{   
     {  
         boost::scoped_ptr<std::string> p(new std::string("Use scoped_ptr often."));  // 打印字符串的值  
         if (p) 
