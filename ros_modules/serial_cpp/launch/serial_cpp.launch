@@ -1,0 +1,5 @@
+<?xml version="1.0"?>
+<launch>
+	<node name ="serial_cpp_sub" pkg="serial_cpp" type="serial_cpp_sub"/>
+	<node name ="serial_cpp_pub" pkg="serial_cpp" type="serial_cpp_pub"/>
+</launch> 
