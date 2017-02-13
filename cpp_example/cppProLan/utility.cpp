@@ -67,6 +67,7 @@ int main()
     /** abort */ 
     auto previous_handler = std::signal(SIGABRT, signal_handler);
     //std::abort();  // Raise SIGABRT
+    
     /** bind */
     int n = 7;
     auto f1 = std::bind(f, _2, _1, 42, std::cref(n), n);
@@ -75,7 +76,7 @@ int main()
     auto f2 = std::bind(f, _3, std::bind(g, _3), _3, 4, 5);
     f2(23,11, 12);
 
-    /**  */ 
+    /** vector */ 
     std::string str = "Hello";
     std::vector<std::string> v;
     v.push_back(std::move(str));

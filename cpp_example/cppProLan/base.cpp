@@ -3,6 +3,7 @@
 #include <map>
 #include <tuple>
 #include <vector>
+#include <list>
 #include <cstddef>
 #include <algorithm>
 #include <functional>
@@ -12,7 +13,7 @@
 
 using namespace std;
 
-
+/** vector */ 
 bool accept3()
 {
     cout << "Do you want to proceed (y or n)?\n"; // write question
@@ -41,9 +42,7 @@ bool accept3()
     z = x; // we get a copy
     //y0 = std::move(x); // we get a move
     cout << x[0] << endl;
-
-
-    
+   
     return false;
 }
 
@@ -66,6 +65,11 @@ void f1(initializer_list<int> args)
         cout << args.begin()[i] << "\n";
 }
 
+template<typename Container, typename Value> Value sum1(const Container& c, Value v)
+{for (auto x : c) 
+    v+=x; 
+    return v;
+}
 
 /********************* 
  *
@@ -80,16 +84,19 @@ int main()
 
     /** 可变长参数 */ 
     f(0.2,'c',"yuck!",0,1,2);
+
     /** strign  */ 
     string name = "Niels Stroustrup";
     string s = name.substr(6,10); // s = "Stroustrup"
     name.replace(0,5,"nicholas"); // name becomes "nicholas Stroustrup"
     name[0] = toupper(name[0]); // name becomes "Nicholas Stroustrup
     cout << name << endl;
+
     /** vectro */ 
     vector<int> v1 = {1, 2, 3, 4};
     vector<string> v2;
     cout << v1[1] << endl;
+
     /** lamada  */ 
     double (*fp1)(double) = [](double a) { return sqrt(a); };
     double (*fp2)(double) = [&](double a) { return sqrt(a); }; //  : the lambda captures
@@ -97,9 +104,10 @@ int main()
     auto fp3 = [](int a) { return sqrt(a); }; // 
     cout << "lamada" <<  fp3(2.2) <<endl;
     int y = 10;
-    auto fz1 = [=]{ if (su) return su; else return 2; };
-    cout << "lamada" <<  fz1() <<endl;
-    /**  */ 
+    auto fz1 = [=](int su){ if (su) return su; else return 2; };
+    cout << "lamada" <<  fz1(12) <<endl;
+
+    /** cast  */ 
     char x = 'a';
     //int* p1 = &x; // error : no implicit char* to int* conversion
     //int* p2 = static_cast<int*>(&x); // error : no implicit char* to int* conversion
@@ -115,14 +123,17 @@ int main()
     }catch(Some_error){
         cout << "exception!\n";
     }
+
     /**  */ 
     f1({1,2,3,5});
-
+    list<double> ld={2.0,33.3,4};
+    double dd = sum1(ld,0.0); //
+    cout << "temp sum :" << dd << endl ;
     /**  */ 
     int xa = 5;
     const char* pc = "Pedersen";
     printf("the value of x is '%d' and the value of s is '%s'\n",xa,pc);
-    char v[5] = "Osa0r";
+    char v[5] = "Os0r";
     //abort();
     exit(1);
 }

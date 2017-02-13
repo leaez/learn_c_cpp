@@ -20,11 +20,11 @@ struct X {
     // explicit conversion
     explicit operator int*() const { return nullptr; }
  
-//   Error: array operator not allowed in conversion-type-id
-//   operator int(*)[3]() const { return nullptr; }
+    // Error: array operator not allowed in conversion-type-id
+    // operator int(*)[3]() const { return nullptr; }
     using arr_t = int[3];
     operator arr_t*() const { return nullptr; } // OK if done through typedef
-//  operator arr_t () const; // Error: conversion to array not allowed in any case
+    //operator arr_t () const; // Error: conversion to array not allowed in any case
 };
 
 void test1()
@@ -45,7 +45,7 @@ struct Base1 {/** polymorphic type: declares a virtual member */
 struct Derived1 : Base1 {/** polymorphic type: inherits a virtual member */ 
 };
  
-struct Base2 {/**   non-polymorphic type*/ 
+struct Base2 {/** non-polymorphic type*/ 
 };
 struct Derived2 : Base2 {/** non-polymorphic type */ 
 };
@@ -67,10 +67,10 @@ void test2()
 }
 
 struct S1 {
-    static int x ; // static data member
+    static int x ; // static data member 只是申明
     // a definition outside of class is required if it is odr-used
 };
-int S1::x = 23;
+int S1::x = 23;  //定义
 
 struct S2 { S2(std::string) {} }; // implicitly convertible from std::string
 
@@ -78,6 +78,7 @@ struct S2 { S2(std::string) {} }; // implicitly convertible from std::string
 int f1(int a)
 {cout <<"f1 called :" << a <<"\n";} 
 
+/**  */ 
 class X1 {
     public:
     static int a; 
@@ -87,16 +88,18 @@ class X1 {
 };
 int X1::a = 10;
 
+/** inner class  */ 
 class enclose { // enclosing class
     int x; // note: private members
     static int s;
  public:
     struct inner { // nested class
         void f(int i) {
-            s = i; // x =i ;erorr canot to non-static
+            s = i; 
+            // x =i ;erorr canot to non-static 不能访问非 静态
         }
         void g(enclose* p, int i) {
-            p->x = i; // OK: assign to enclose::x
+            p->x = i; // OK: assign to enclose::x 可以通过间接 指针访问
         }
     };
 };
@@ -112,18 +115,21 @@ struct EE: AA
     EE() = default; // explicitly defaulted, calls A::A()
 };
 
+/** template */ 
 int ai[2]= {1, 2};
 int abc = 123;
 const int *cp= const_cast<int *>(&abc);
 const int b[3] = {1,2,3}; 
 template<int (&pa)[3]> struct W {};
 template<const int* pci> struct X2 {};
-template<int (*pf)(int)> struct X3 {X3(){pf(99);}};
+template<int (*pf)(int)> struct X3 {X3(){pf(99);}};  //类似回调
 
 template<class T> class X4{}; // declaration, not definition
 template<typename T>void f(T s){
     std::cout << s << '\n';
 }
+
+/** 多个参数 */ 
 template<class... Types> void f2(Types... values){
     //for(auto v: values){
     //    cout << v ; 
@@ -146,17 +152,21 @@ int main()
 {
     /**  */ 
     test1();
-    /**  */ 
+
+    /** 多态  */ 
     test2();
+
     /** static */
     S1::x = 55;
     cout << S1::x << "\n";
+
     /** initalize */ 
     S2 s1("abc"); // OK: conversion from const char[4] to std::string
     //S2 s2 = "abc"; // Error: no conversion from const char[4] to S
-    //S2 s = "abc"s; // OK: conversion from std::string to S
+    // S2 s = "abc"s; // error: conversion from std::string to S
     int n = 1;
     double&& copy_ref = n; // bind to an rvalue temporary with value 1.0
+    
     /** constructor */  
     X1 x1;
     x1.mem1();
@@ -164,6 +174,7 @@ int main()
     x1.mem1();
 
     EE e;
+    
     /** template */ 
     //W<b> w; // eror: no conversion
     //int * pai = const_cast<int * >(ai);
@@ -177,13 +188,15 @@ int main()
     ptr("------sfdfs");
     X5<2,3,int> x5;
     x5.f(852);
-    /** const */ 
+
+    /** const pioint */ 
     int i2;
-    const int *cp = &i2;
+    const int *cp = &i2; // 指针指向 常量
+    //*cp = 23; //error readonly
     int *p = const_cast<int *>(cp);
     *p = 10;
     int * const cp2 = p; // here the static_cast is optional
-    cp2 = &i2;
+    //cp2 = &i2;  //error readonly
     cout << i2 << "\n";
 
     

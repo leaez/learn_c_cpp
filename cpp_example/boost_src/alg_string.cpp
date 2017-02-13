@@ -2,14 +2,18 @@
 #include <array>
 #include <tuple>
 
+#include <string>
 #include <boost/lexical_cast.hpp>
 #include <boost/format.hpp>
 #include <boost/algorithm/string.hpp>
 using namespace std;
 using namespace boost; 
 
-bool NotH(const char &ch)   {if(ch == ' ' || ch == 'H' || ch == 'h')
-         return true;     else      return false;}
+bool NotH(const char &ch) {
+    if(ch == ' ' || ch == 'H' || ch == 'h')
+        return true;
+    else
+        return false;}
 
 
 int main(int argc, char* argv[])
@@ -20,9 +24,9 @@ int main(int argc, char* argv[])
 
     /** format */ 
     boost::format fff = boost::format("%1% %2%  %3% %2% %1% \n") ; //  %3%  is 3rd argu
-    cout << fff % 1 % 2 % 3 << endl;
+    cout << fff % 1.2 % "fsd" % 3 << endl;
   
-    cout << boost::format("\n\n%s" 
+    cout << boost::format("\n%s" 
             "%1t 十进制 = [%d]\n" 
             "%1t 格式化的十进制 = [%5d]\n" 
             "%1t 格式化十进制，前补'0' = [%05d]\n" 
@@ -88,7 +92,12 @@ int main(int argc, char* argv[])
     /** ostream_iterator */ 
     std::ostream_iterator<int> i1(std::cout, ", ");//ostream_iterator(ostream_type& stream, const CharT* delim)
     std::fill_n(i1, 5, 123); // pirnt: 123, 123, 123, 123, 123,  fill 5 * 123, delim :, 
-
+    std::cout << endl;
+    /** stoi */ 
+    std::string str_dec = "2001, A Space Odyssey";
+    std::string::size_type sz;   // alias of size_t
+    int i_dec = std::stoi (str_dec,&sz);
+    std::cout <<sz <<  i_dec <<endl;
 
     return 0;
 }

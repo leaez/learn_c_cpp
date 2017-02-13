@@ -1,12 +1,12 @@
 
 #include <iostream>
-#include <boost/function.hpp>
-#include <boost/bind.hpp>
+#include <functional>
+//#include <boost/bind.hpp>
 #include <boost/numeric/ublas/matrix.hpp>
 #include <boost/numeric/ublas/io.hpp>
 #include "boost/multi_array.hpp"
 #include <boost/program_options.hpp>
-#include <boost/thread.hpp>
+#include <thread>
 #include <boost/timer.hpp>
 
 
@@ -36,13 +36,13 @@ private:
   }
  
 public:
-  boost::function< double() > Update;
+  std::function< double() > Update;
   void SetUpdateMethod(int method) {
     if(method == 1) {
-      this->Update = boost::bind(&MyClass::Update1,this);
+      this->Update = std::bind(&MyClass::Update1,this);
     }
     if(method == 2) {
-      this->Update = boost::bind(&MyClass::Update2,this);
+      this->Update = std::bind(&MyClass::Update2,this);
     }
   }
   void thred_fun(){cout << "threadd run \n"; }
@@ -52,8 +52,8 @@ public:
 int main (int argc, char* argv[]) 
 {
     /** Function */ 
-    boost::function<double ()> FunctionPointer0 = &Function0;
-    boost::function<double (const int)> FunctionPointer1 = &Function1;
+    std::function<double ()> FunctionPointer0 = &Function0;
+    std::function<double (const int)> FunctionPointer1 = &Function1;
     FunctionPointer0();
     FunctionPointer1(1);
     /** bind */ 
@@ -84,6 +84,7 @@ int main (int argc, char* argv[])
                 A[i][j][k] = values++;
 
     /**options_  */
+#if 1
     int compression;
     std::vector<std::string> FileList;
     po::options_description desc("Allowed options");
@@ -103,17 +104,15 @@ int main (int argc, char* argv[])
     if(vm.count("compression"))     {
         std::cout << "Compression level was set to " << vm["compression"].as<int>() << std::endl;
     } else {}
-
+#endif
     /** thread */
-    boost::thread MyThread(&Function0);
+    std::thread MyThread(&Function0);
     
-    boost::thread MyThread1(boost::bind(&MyClass::thred_fun, a));
+    std::thread MyThread1(std::bind(&MyClass::thred_fun, a));
     MyThread.join();
     MyThread1.join();
 
     /** signal */ 
-
-
 
 
 

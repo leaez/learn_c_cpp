@@ -1,5 +1,5 @@
 #include <iostream>
- 
+using namespace std;
 struct V {
     virtual void f() {};  // must be polymorphic to use runtime-checked dynamic_cast
 };
@@ -17,11 +17,12 @@ struct D : A, B {
 
 struct Base {
     static int a;
+    virtual void name() {cout << "base name;" <<endl;}
     virtual ~Base() {}
 };
 
 struct Derived: Base {
-    virtual void name() {}
+    void name() {cout << "derived name;" <<endl;}
 };
  
 int Base::a = 10;
@@ -35,14 +36,19 @@ int main()
  
  
     Base* b1 = new Base;
-    if(Derived* d = dynamic_cast<Derived*>(b1))
+    Derived* dd = static_cast<Derived*>(b1);
+    dd->name(); // base的
+    //Derived* dd = dynamic_cast<Derived*>(b1);
+    //dd->name(); //这样直接调用，会运行错误的
+
+    if(Derived* d = dynamic_cast<Derived*>(b1)) // d变成 空， 失败了
     {
         std::cout << "downcast from b1 to d successful\n";
-        d->name(); // safe to call
+        d->name(); // safe to call 调用的是deriver的
     }
  
     Base* b2 = new Derived;
-    if(Derived* d = dynamic_cast<Derived*>(b2))
+    if(Derived* d = dynamic_cast<Derived*>(b2))  /** 只有base指针直到 derived 才是安全了 */ 
     {
         std::cout << "downcast from b2 to d successful\n";
         d->name(); // safe to call

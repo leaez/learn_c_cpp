@@ -72,10 +72,12 @@ void test_reg3()
     auto words_end = std::sregex_iterator();
 
     for (std::sregex_iterator i = words_begin; i != words_end; ++i) {
-        std::smatch match = *i;
-        std::string match_str = match.str();
-        if (match_str.size() > 6) {
-            std::cout << "+  " << match_str << '\n';
+        //std::cout << (*i)[1] << "+" << endl;
+        //std::smatch match = *i;
+        std::string match_str = (*i).str();// match.str();
+        if (match_str.size() > 6) 
+        {
+            //std::cout << "+  " << match_str << '\n';
         }
     }
  
@@ -96,17 +98,20 @@ int main()
    
     /** regex */ 
 #if 1
-    regex pat ("(\\w{4})\\s{1}(\\w{4})?");
-    string rs = "AA 123456-45678";
+    /** search */ 
+    regex pat ("(\\w{4})(\\s{1})(\\w{4})?");
+    string rs = "AAaa 123456-45678";
     smatch m;
     regex_search(rs,m,pat);
     cout << boolalpha;
     cout << m[0].matched << m[0] << '\n'; // true: we found a match
     cout << m[1] << m[1].matched << '\n'; // true: there was a first sub_match
     cout << m[2] << m[2].matched << '\n'; // true: there was a first sub_match
-
     test_reg0();
+
+    /** replace */ 
     test_reg1();
+    /** iterator */ 
     test_reg2();
 #endif
     

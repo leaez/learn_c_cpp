@@ -15,8 +15,7 @@
 using namespace std;
 
 
-/** regex */ 
-
+/** ostringstream */ 
 void test2()
 {
     ostringstream oss {"Label: ",ios::ate}; // write at end
@@ -36,13 +35,13 @@ void test2()
  * */ 
 int main()
 {
-    /**  */ 
+    /** vectro  */ 
     vector<int> vi1 {1,3,5,7,9,7,5,3}; // vector initialized by five ints
     vector<string> vs(7); // vector initialized by sev en empty strings
     vector<int> vi2;
     vi2 = {2,4,6,8,6,4,2}; // assign sequence of four ints to vi2
-    auto cnt = find_if(vi1.begin(),vi1.end(),[](int& x) { return (x==7); }) ;
-    cout << *cnt << "if\n";
+    auto cnt = find_if(vi1.begin(),vi1.end(),[](int& x) { return (x==7);}) ;
+    cout << *cnt << "if\n"; /**返回 iterator */ 
     replace(vi1.begin(),vi1.end(),3,8);
     
     //generate(begin(vi2),end(vi2),Randint{});
@@ -69,6 +68,7 @@ int main()
     cout << aa.size();
 
     /** set */ 
+    cout << "-------------\n";
     std::unordered_set<int> example = {1, 2, 3, 4};
     auto search = example.find(2);
     if(search != example.end()) {
@@ -76,6 +76,7 @@ int main()
     }
 
     /** map emplace */ 
+    cout << "-------------\n";
     std::map<std::string, std::string> m;
     m.emplace(std::make_pair(std::string("a"), std::string("a")));
     m.emplace(std::make_pair("b", "abcd"));
@@ -89,6 +90,7 @@ int main()
     }
 
     /** string */
+    cout << "-------------\n";
     string ss = "12345678";
     size_t dist = 3; // put number of characters read here
     auto x = stoi(ss,&dist); // x = 123 (an int)
@@ -96,7 +98,7 @@ int main()
 
     string s = "but I have heard it works even if you don't believe in it";
     s.replace(0,4,"1"); // erase initial "but "
-    s.replace(s.find("even"),4,"--------");
+    s.replace(s.find("even"),4,"--------"); /** 4字符个数 */ 
     s.replace(s.find(" don't"),6,""); // erase by replacing with ""
     string s2;
     s2.resize(20,'a');

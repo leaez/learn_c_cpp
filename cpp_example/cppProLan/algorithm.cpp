@@ -36,7 +36,7 @@ int main()
                                                      std::placeholders::_1, 2))) {
         std::cout << "None of them are odd\n";
     }
-    /**  */ 
+    /** copy  */ 
     std::for_each(v.begin(), v.end(), [](int &n){ n++; });
     //std::for_each_n(v.begin(), 4, [](int &n){ n++; });
     std::copy(v.cbegin(), v.cend(), std::ostream_iterator<int>(std::cout, " "));
@@ -69,7 +69,7 @@ int main()
                      [](char c1, char c2){ return c1 == 'i' && c2 == 'n'; });
      std::cout << "after:  " << s2 << '\n';
 
-    /**  */ 
+    /** partion  */ 
      std::array<int, 9> v3 = { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
     auto is_even = [](int i){ return i % 2 == 0; };
     std::cout.setf(std::ios_base::boolalpha);
@@ -83,7 +83,7 @@ int main()
     std::copy(v3.cbegin(), v3.cend(), std::ostream_iterator<int>(std::cout, " "));
     std::cout << std::is_partitioned(v3.begin(), v3.end(), is_even);
     
-    /**  */ 
+    /** product,  */ 
     std::vector<int> a{0, 1, 2, 3, 4};
     std::vector<int> b{5, 4, 2, 3, 1};
  
@@ -94,6 +94,7 @@ int main()
                                 std::plus<int>(), std::equal_to<int>());
     std::cout << "Number of pairwise matches between a and b: " <<  r2 << '\n';
 
+    /** transform generate */ 
     std::cout << '\n';
     std::string st("hello");
     std::transform(st.begin(), st.end(), st.begin(),
