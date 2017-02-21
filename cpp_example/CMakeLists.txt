@@ -1,8 +1,9 @@
 cmake_minimum_required(VERSION 2.6)
  
-Project(boost_example)
-SET(CMAKE_CXX_COMPILER "g++-4.9")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread -lboost_program_options -std=c++11")
+Project(cpp_example)
+#SET(CMAKE_CXX_COMPILER "g++-4.9")
+#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread -lboost_program_options -lboost_system -lboost_thread -lboost_timer -std=c++11")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread -std=c++11")
 #SET(CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} "-std=c++11 -pthread")
 #FIND_PACKAGE(Boost)
 #set(Boost_USE_MULTITHREADED ON) # which is the default
@@ -26,6 +27,7 @@ SET(MY_SRCS
     #boost_src/base.cpp
     #boost_src/boost1.cpp
     #boost_src/smartptr.cpp
+    boost_src/asio.cpp
     
 
     #cppProLan/lan.cpp
@@ -41,12 +43,13 @@ SET(MY_SRCS
 
 )
 
-ADD_EXECUTABLE(boost_example ${MY_SRCS})
-target_link_libraries(boost_example 
+ADD_EXECUTABLE(cpp_example ${MY_SRCS})
+target_link_libraries(cpp_example 
     ${CMAKE_THREAD_LIBS_INIT}
-    boost_program_options
+    #boost_program_options
     #boost_regex
-    #boost_system
-    #boost_thread
+    boost_system
+    boost_thread
+    boost_timer
     )
-#target_link_libraries (boost_example ${CMAKE_THREAD_LIBS_INIT})
+#target_link_libraries (cpp_example ${CMAKE_THREAD_LIBS_INIT})
