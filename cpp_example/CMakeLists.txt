@@ -27,11 +27,10 @@ SET(MY_SRCS
     #boost_src/base.cpp
     #boost_src/boost1.cpp
     #boost_src/smartptr.cpp
-    boost_src/asio.cpp
+    #boost_src/asio.cpp
     
-
+    cppProLan/base.cpp
     #cppProLan/lan.cpp
-    #cppProLan/base.cpp
     #cppProLan/cast.cpp
     #cppProLan/class.cpp
     #cppProLan/algorithm.cpp

@@ -1,6 +1,6 @@
 #
 build/
-
+cpp_eample/build/
 # python 
 
 *.pyc

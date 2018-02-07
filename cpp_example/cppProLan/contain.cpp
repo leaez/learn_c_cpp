@@ -11,13 +11,15 @@
 #include <random>
 #include <regex>
 #include <unordered_set>
+#include <cstring>
 
 using namespace std;
 
 
 /** ostringstream */ 
-void test2()
+void ostring_test()
 {
+    cout << "--------------osstring test: \n";
     ostringstream oss {"Label: ",ios::ate}; // write at end
     cout << oss.str() << '\n'; // writes "Label: "
     oss<<"val";
@@ -28,14 +30,31 @@ void test2()
     cout << oss2.str() << '\n'; // writes "valel: " (val overwr ites "Label: ")
 }
 
-
-
-/********************* 
- *
- * */ 
-int main()
+/** vector */ 
+void vector_test()
 {
-    /** vectro  */ 
+    /**  */ 
+    cout << "----------------vector test"<<endl;
+    int v[] = {0,1,2,3,4,5,6,7,8,9};
+    for (auto x : v) // for each x in v
+        cout << x << ' ';       cout << '\n';
+
+    enum class Color { red, blue, green }; //strongly typed 
+    //Color cx = red; // error :
+    Color cz = Color::red; // OK
+
+    vector<int> z{1000,22};
+    vector<int> x{222,333};
+    vector<int> y{444,555};
+    z = x; // we get a copy
+    cout <<"after copy:" << x[0] << x[1] << endl;
+    y = std::move(x); // we get a move
+    cout <<"after move:" << y[0] << y[1] << endl;
+
+    vector<int> v1 = {1, 2, 3, 4};
+    vector<string> v2;
+    cout << v1[1] << endl;
+
     vector<int> vi1 {1,3,5,7,9,7,5,3}; // vector initialized by five ints
     vector<string> vs(7); // vector initialized by sev en empty strings
     vector<int> vi2;
@@ -58,6 +77,54 @@ int main()
     //for (auto& x : vi2) // implicit use of v.begin() and v.end()
     //    cout << x << '\n';
 
+
+}
+
+void string_test()
+{
+    /** string */
+    cout << "-------------string test: \n";
+    string name = "l2345 string";
+    string sub = name.substr(6,5); // s = "strin"
+    cout << name<< " after sub:" << sub <<endl;
+    name.replace(0,5,"nicholas"); // name becomes "nicholas string"
+    name[0] = toupper(name[0]); // name becomes "Nicholas Stroustrup
+    cout << name << endl;
+
+    string ss = "12345678";
+    size_t dist = 3; // put number of characters read here
+    auto x = stoi(ss,&dist); // x = 123 (an int)
+    cout << x <<"--" <<  dist << endl; /** 12345678--8 */ 
+
+    string s = "but I have heard it works even if you don't believe in it";
+    s.replace(0,4,"1"); // erase initial "but "
+    s.replace(s.find("even"),4,"--------"); /** 4字符个数 */ 
+    s.replace(s.find(" don't"),6,""); // erase by replacing with ""
+    cout << const_cast<char*>(s.c_str()) << endl;
+    
+    string s2;
+    s2.resize(20,'a');
+    //int n2= s.copy(s2,3,0);
+    int n2= s.copy(const_cast<char*>(s2.c_str()),3,0);
+    cout << s2 << " len:" <<  n2 <<endl;
+    cout << s << endl;
+
+    char source[] = "Copy this!";  char dest[5]; // note dest is only 5 chars!
+    strcpy(dest, source); // overflow! // Don’t use C-style strings
+
+
+
+
+}
+
+/********************* 
+ *
+ * */ 
+int main()
+{
+    /**  */ 
+    vector_test();
+
     /** array  */ 
     cout << "-----------------array\n";
     std::array<int, 3> a2 = {1, 2, 3};
@@ -68,7 +135,7 @@ int main()
     cout << aa.size();
 
     /** set */ 
-    cout << "-------------\n";
+    cout << "-------------set:\n";
     std::unordered_set<int> example = {1, 2, 3, 4};
     auto search = example.find(2);
     if(search != example.end()) {
@@ -76,7 +143,7 @@ int main()
     }
 
     /** map emplace */ 
-    cout << "-------------\n";
+    cout << "-------------map\n";
     std::map<std::string, std::string> m;
     m.emplace(std::make_pair(std::string("a"), std::string("a")));
     m.emplace(std::make_pair("b", "abcd"));
@@ -88,32 +155,11 @@ int main()
     for (const auto &p : m) {
         std::cout << p.first << " => " << p.second << '\n';
     }
-
-    /** string */
-    cout << "-------------\n";
-    string ss = "12345678";
-    size_t dist = 3; // put number of characters read here
-    auto x = stoi(ss,&dist); // x = 123 (an int)
-    cout << x <<"--" <<  dist<< endl;
-
-    string s = "but I have heard it works even if you don't believe in it";
-    s.replace(0,4,"1"); // erase initial "but "
-    s.replace(s.find("even"),4,"--------"); /** 4字符个数 */ 
-    s.replace(s.find(" don't"),6,""); // erase by replacing with ""
-    string s2;
-    s2.resize(20,'a');
-    cout << const_cast<char*>(s.c_str()) << endl;
-    //int n2= s.copy(s2,3,0);
-    int n2= s.copy(const_cast<char*>(s2.c_str()),3,0);
-    cout << s2 << "\n" <<  n2 <<endl;
-    cout << s << endl;
-    
-    /** regex */ 
+   
+    /**  */ 
+    string_test();
     /** osstream */ 
-    test2();
-    //for (int i; cin>>i && 0<i;)
-    //    cout << i << '\n';
-    
+    ostring_test();
     /**  */ 
 
 }

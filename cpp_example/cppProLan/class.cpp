@@ -79,6 +79,21 @@ struct C
     }
 }; /** 如果有pointer，use deep copy; std::copy() */ 
 
+void cast_test(){
+    /** cast  */ 
+    char x = 'a';
+    //int* p1 = &x; // error : no implicit char* to int* conversion
+    //int* p2 = static_cast<int*>(&x); // error : no implicit char* to int* conversion
+    int* p3 = reinterpret_cast<int*>(&x); // OK: on your head be it
+    struct B { /* ... */ };
+    struct D : B { /* ... */ }; // see §3.2.2 and §20.5.2
+    B* pb = new D; // OK: implicit conversion from D* to B*
+    //D* pd0 = pb; // error : no implicit conversion from B* to D*
+    D* pd1 = static_cast<D*>(pb); // OK
+
+}
+
+
 
 int main(int argc, char* argv[])
 {
@@ -104,6 +119,8 @@ int main(int argc, char* argv[])
     //S2<okay> s2; // error
 
     //f(new int(1)); // calls #3, even though specialization of #1 would be a perfect match
+
+    cast_test();
 
     return 0;
 }

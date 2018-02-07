@@ -27,6 +27,14 @@ struct Derived: Base {
  
 int Base::a = 10;
 
+cast_test(){
+    int i1 = 10;int i2 = 4;
+    float f = (float)i1 / i2;/** C-style casts */ 
+    float f = float(i1) / i2;
+
+    int i = 48; char ch = static_cast<char>(i);
+}
+
 int main()
 {
     D d; // the most derived object
