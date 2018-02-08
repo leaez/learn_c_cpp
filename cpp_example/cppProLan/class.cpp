@@ -20,7 +20,7 @@ struct A
 {
     int x;
     A(int x = 1): x(x) {} // user-defined default constructor
-    //A() 该constr is not declared because another constructor exists
+    //A() constr is not declared because another constructor exists
     A(const A& a) : x(a.x) { } // user-defined copy ctor
     //A(A&& o) noexcept : x(std::move(o.x)) { cout << "move constr called \n"; }
     A& operator=(A&& other) {   //"move assigned\n";
@@ -30,21 +30,31 @@ struct A
     }
 };
 */
+class clist{
+    private: int a,b,c;
+    public:    
+        static int s_value;
+    //clist(){a=2;b=3; c=4;} /** user-defined default ctor */
+    clist():a(2),b(3),c(4){} /** user-defined default ctor */
+    clist(int aa =1){a =aa;} /** user-defined default ctor;delegate/ might ambiguous!! */ 
+    clist(int aa,int bb):clist(10){a =aa;} /** user-defined default ctor;delegate/ might ambiguous!! */ 
+};
+int clist::s_value = 23;
+
 struct A
 {
     std::string s;
-    A() : s("test") { }
-    A(const A& o) : s(o.s) { std::cout << "move failed!\n"; }
+    A() : s("test") { 
+        std::cout << " user-defined default ctor!\n"; }
+    A(const A& o) : s(o.s) { 
+        std::cout << " user-defined copy ctor!\n"; }
     //A(A&& o) : s(std::move(o.s)) { }
-    A& operator=(const A& other)
-    {
+    A& operator=(const A& other)  {/**  */ 
          s = other.s;
          std::cout << "copy assigned\n";
          return *this;
     }
-
-    A& operator=(A&& other)
-    {
+    A& operator=(A&& other)   { /**  */ 
          s = std::move(other.s);
          std::cout << "move assigned\n";
          return *this;
@@ -52,17 +62,17 @@ struct A
 };
 
 
-A f(A a){    return a;}
+A f(A a){ return a;}
 
 struct B : A {
     // implicit move constructor B::(B&&)
 };
 
-    template< class T > void g(T);    // #1: overload for all types
-    template<>          void g(int*); // #2: specialization of #1 for pointers to int
-    template< class T > void g(T*);   // #3: overload for all pointer types
+template< class T > void g(T);    // #1: overload for all types
+template<>          void g(int*); // #2: specialization of #1 for pointers to int
+template< class T > void g(T*);   // #3: overload for all pointer types
 
-    template<void (*pf)(int)> struct AF {};
+template<void (*pf)(int)> struct AF {};
 template<int (pa)[5]> struct W {};
 template<const char*> struct S2 {};
 
@@ -97,7 +107,10 @@ void cast_test(){
 
 int main(int argc, char* argv[])
 {
-   /**  */ 
+   /**  */
+    //clist aa{1,2,3}; //only no use-defined constr
+    clist cl(2);
+
     A a1 = f(A()); // move-construct from rvalue temporary
     A a2 = std::move(a1); // move-construct from xvalue
 

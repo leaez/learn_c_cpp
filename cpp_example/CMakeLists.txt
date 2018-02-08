@@ -29,10 +29,10 @@ SET(MY_SRCS
     #boost_src/smartptr.cpp
     #boost_src/asio.cpp
     
-    cppProLan/base.cpp
+    #cppProLan/base.cpp
     #cppProLan/lan.cpp
     #cppProLan/cast.cpp
-    #cppProLan/class.cpp
+    cppProLan/class.cpp
     #cppProLan/algorithm.cpp
     #cppProLan/contain.cpp
     #cppProLan/stl.cpp

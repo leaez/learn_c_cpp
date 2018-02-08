@@ -39,9 +39,11 @@ void vector_test()
     for (auto x : v) // for each x in v
         cout << x << ' ';       cout << '\n';
 
-    enum class Color { red, blue, green }; //strongly typed 
-    //Color cx = red; // error :
-    Color cz = Color::red; // OK
+    std::vector<int> vl = {1, 2, 3, 4, 5, 6, 7};
+    for(const int &i : vl) // access by const reference
+        std::cout << i << ' ';
+    for(int n: {0, 1, 2, 3, 4, 5}){
+        cout << n ; }        cout <<endl;
 
     vector<int> z{1000,22};
     vector<int> x{222,333};
@@ -51,12 +53,11 @@ void vector_test()
     y = std::move(x); // we get a move
     cout <<"after move:" << y[0] << y[1] << endl;
 
-    vector<int> v1 = {1, 2, 3, 4};
-    vector<string> v2;
-    cout << v1[1] << endl;
-
     vector<int> vi1 {1,3,5,7,9,7,5,3}; // vector initialized by five ints
-    vector<string> vs(7); // vector initialized by sev en empty strings
+    vi1[15] = 2; // no bounds checking!!!
+    vi1.at(7) = 3; // does bounds checking ; throw std::out_of_range
+    vi1.resize(5); 
+    vector<string> vs(7); // vector initialized by seven empty strings
     vector<int> vi2;
     vi2 = {2,4,6,8,6,4,2}; // assign sequence of four ints to vi2
     auto cnt = find_if(vi1.begin(),vi1.end(),[](int& x) { return (x==7);}) ;
@@ -73,9 +74,7 @@ void vector_test()
     //vs2.assign("The Bear","The Bull and Vet");// run-time error
     cout << vi2.size() << vi2.capacity() << "\n";
 
-    //copy(vi1.begin(),vi1.end(),vi2.begin());
-    //for (auto& x : vi2) // implicit use of v.begin() and v.end()
-    //    cout << x << '\n';
+
 
 
 }
@@ -111,11 +110,22 @@ void string_test()
 
     char source[] = "Copy this!";  char dest[5]; // note dest is only 5 chars!
     strcpy(dest, source); // overflow! // Don’t use C-style strings
-
-
-
-
 }
+
+/**  */ 
+void array_test(){
+    /** array  */ 
+    cout << "-----------------array test :\n";
+    std::array<int, 3> a2 = {1, 5, 3};
+    std::sort(a2.begin(), a2.end());
+    std::array<int, 3> a1 {1, 2, 3} ; //  in C++11 
+    array<string, 4> aa = {"Churchill", "Clare"};
+    for (auto& x : a1) // implicit use of v.begin() and v.end()
+        cout << x << '\n';
+    cout <<"size:" << aa.size() << "at:" << aa.at(1) <<endl;
+    
+}
+
 
 /********************* 
  *
@@ -124,15 +134,8 @@ int main()
 {
     /**  */ 
     vector_test();
-
-    /** array  */ 
-    cout << "-----------------array\n";
-    std::array<int, 3> a2 = {1, 2, 3};
-    std::array<int, 3> a1 {1, 2, 3} ; //  in C++11 
-    array<string, 4> aa = {"Churchill", "Clare"};
-    for (auto& x : a1) // implicit use of v.begin() and v.end()
-        cout << x << '\n';
-    cout << aa.size();
+    /**  */ 
+    array_test();
 
     /** set */ 
     cout << "-------------set:\n";
