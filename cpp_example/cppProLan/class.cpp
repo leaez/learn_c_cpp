@@ -8,28 +8,11 @@
 #include <functional>
 #include <utility>
 #include <string>
-
+#include <cstring>
 
 using namespace std;
 //using namespace boost; 
 
-
-/** default constructor，  */ 
-/*
-struct A
-{
-    int x;
-    A(int x = 1): x(x) {} // user-defined default constructor
-    //A() constr is not declared because another constructor exists
-    A(const A& a) : x(a.x) { } // user-defined copy ctor
-    //A(A&& o) noexcept : x(std::move(o.x)) { cout << "move constr called \n"; }
-    A& operator=(A&& other) {   //"move assigned\n";
-        cout <<"move assigned\n";
-         x = std::move(other.x);
-         return *this;
-    }
-};
-*/
 class clist{
     private: int a,b,c;
     public:    
@@ -60,6 +43,55 @@ struct A
          return *this;
     }
 };
+
+class Point{
+private:
+    double m_x, m_y;
+    char *name;
+public:
+    explicit Point(double x=0.0, double y=0.0 ): m_x(x), m_y(y) {
+        name = new char[10]; strcpy(name, "I'm point"); name[9] = '\0';} /** default cnstr */ 
+    Point(double) = delete; /**  */ 
+    /** deep copy: use containner!! like std::vector(self mem manage), not self implement deep copy   */ 
+    Point& operator= (const Point &point){ /** assign cnstr / use deep copy */ 
+        if (this == &point)  return *this; /** check for self-assignment  */ 
+        m_x=(point.m_x); m_y=(point.m_y);
+        if(point.name){name = new char[10]; 
+            strcpy(name,point.name); name[9] = '\n';}
+        return *this;  
+    } 
+    Point(const Point& p1){/** copy cnstr */
+        m_x = p1.m_x; m_y = p1.m_y; 
+        if(p1.name){name = new char[10]; 
+            strcpy(name,p1.name); name[9] = '\n';}
+    } 
+    Point operator- () const{
+        return Point(-m_x, -m_y );}
+    bool operator== (const Point &p1){ /** must only one args */ 
+        return ( this->m_x == p1.m_x && p1.m_y == this->m_y );
+    }
+    Point& operator++(){ /**  unary operators */ 
+        this->m_x++; this->m_y++; return *this; /** return self */ 
+    }
+    double& operator[] (int index){ /**  */ 
+        m_x+=index;return m_x;
+    }
+    double& operator() (int a, int b){ /** just like function; but can stored member var */ 
+        m_x=m_y+a+b; return m_x;
+    }
+
+    ~Point(){ // destructor
+        delete[] name; 
+        cout << "Point destroy \n";
+    }
+    friend std::ostream& operator<< (std::ostream &out, const Point &point);
+};
+ 
+std::ostream& operator<< (std::ostream &out, const Point &point){
+    out <<"Point:"<< point.name << "(" << point.m_x << ", " << point.m_y << " " << ")";
+    return out;
+}
+
 
 
 A f(A a){ return a;}
@@ -107,6 +139,14 @@ void cast_test(){
 
 int main(int argc, char* argv[])
 {
+    /**  */ 
+    Point p1(1,2);
+    Point p2(p1);
+    Point p3 = p2;
+    if(p1 == p3)
+        cout << p1 <<" []operator :" << p1[2] <<endl;
+
+
    /**  */
     //clist aa{1,2,3}; //only no use-defined constr
     clist cl(2);
@@ -134,6 +174,7 @@ int main(int argc, char* argv[])
     //f(new int(1)); // calls #3, even though specialization of #1 would be a perfect match
 
     cast_test();
+
 
     return 0;
 }
