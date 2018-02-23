@@ -31,8 +31,8 @@ SET(MY_SRCS
     
     #cppProLan/base.cpp
     #cppProLan/lan.cpp
-    #cppProLan/cast.cpp
-    cppProLan/class.cpp
+    cppProLan/cast.cpp
+    #cppProLan/class.cpp
     #cppProLan/algorithm.cpp
     #cppProLan/contain.cpp
     #cppProLan/stl.cpp
