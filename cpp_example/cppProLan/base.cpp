@@ -127,6 +127,7 @@ int basic_test()
     constexpr int limit = mf + 1; //ok compiler check if const
     const int consta = mf-1; /** ok */ 
 
+
     cout << " cin key input : (y or n)?\n"; // write question
     char answer = 0;
     //cin >> answer; // read answer
@@ -170,6 +171,9 @@ void basic_test2(){
     delete[] array;
 
     /** pointer */
+    int abc = 123;
+    const int *cp= const_cast<int *>(&abc); // cast to const
+    //constexpr int *cp= &abc;
     const int valc = 5;  int val1=1; int val2 = 2;
     int *ptr = &val2;
     int **ptrptr = &ptr;
@@ -208,6 +212,9 @@ void basic_test2(){
 
     assert(returnByReference()>0 && "Car could not be found in database");
     static_assert(sizeof(long) == 8, "long must be 8 bytes"); //while compile
+
+    int n = 1;
+    double&& copy_ref = n; // bind to an rvalue temporary with value 1.0
     
 }
 
