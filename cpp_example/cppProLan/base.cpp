@@ -92,18 +92,21 @@ int& returnByReference(){
 
 int basic_test()
 {
-    cout << "************* basic: list init; cout/cin;  . " << endl;
+    cout << "************* basic test1. :list init/cout/cin; " << endl;
     using namespace ns_b; 
-    int a = 5, b = 6;int c(7), d(8);int e{9}, f{10};
+    int a = 5, b = 6;
+    int c(7), d(8);int e{9}, f{10};
     std::cout << "v type:" << typeid(a + b).name()<< endl;
     double vd = 5.0;
     std::cout<<"double size:" << sizeof(vd) << endl;
     using distance_t = double; /** c++11 */ /** typedef double distance_t; */  
     srand(5); // set initial seed value to 5323  only called one time;
-    for (int count=0; count < 5; ++count) std::cout << rand() << "\t"; /**  0 and RAND_MAX */ 
+    for (int count=0; count < 5; ++count) 
+        std::cout << rand() << "\t"; /**  0 and RAND_MAX */ 
 
     /** array */ 
-    int array[] = { 13, 1, 21, 3, 5, 8, 1, 2 };
+    int array[] = { 13, 1, 21, 3, 5, 8, 1, 2 };  // initializer list
+    int *array2 = new int[5] { 5, 4, 3, 2, 1 };
     std::cout << "The array has: " << sizeof(array) / sizeof(array[0]) << "elements\n";
     std::sort(array, array+8);
     for(auto i:array){cout << i << " ";} /** c++ 11 */ 
@@ -161,6 +164,7 @@ int basic_test()
 }
 
 void basic_test2(){
+    cout << "************* basic test2 : ref/pointer/ " << endl;
     /** Dynamic alloc mem */ 
     int *array = new int[3];
     delete[] array;
@@ -170,6 +174,7 @@ void basic_test2(){
     int *ptr = &val2;
     int **ptrptr = &ptr;
     const int *ptr_c = &valc; // okay, ptr pointing to a "const int"
+
     ptr_c = &val2; // ok too, but    *ptr_c = 12; error
     //int *const c_ptr = &value; //error; is a const ptr
     std::cout << "ptr:" << **ptrptr <<endl; // dereference pointer to int to get int value
@@ -178,6 +183,16 @@ void basic_test2(){
     cout << "array pointer val: " << arr_p[2][3] <<endl; //4
     int (*fcnPtr)() = returnByValue; // assign fcnPtr to function foo
     (*fcnPtr)(); // call function foo(5) through fcnPtr.
+
+    /** const pioint */ 
+    int i2;
+    const int *cp = &i2; // 指针指向 常量
+    //*cp = 23; //error readonly
+    int *p = const_cast<int *>(cp);
+    *p = 10;
+    int * const cp2 = p; // here the static_cast is optional
+    //cp2 = &i2;  //error readonly
+    cout << i2 << "\n";
 
     /** reference */ 
     const int &ref = valc; // ref is a reference to const value;  = val2; =5;(r-value) //ok
@@ -198,7 +213,7 @@ void basic_test2(){
 
 void lambda_func_test()
 {
-    cout << "************* lambda test. " << endl;
+    cout << "************* lambda test. :lambda " << endl;
     /** lambda, function  */ 
     auto glambda = [](int a, int b) { return a < b; }; 
     bool b = glambda(3, 4); /** func name */ 
@@ -226,6 +241,7 @@ void lambda_func_test()
 }
 
 void exception_test(){
+    cout << "************* exception test. " << endl;
     /** exception  */ 
     struct Some_error { };
     try{ throw Some_error{};

@@ -13,6 +13,7 @@
 using std::cout;
 using namespace std;
 
+/**  */ 
 struct X {
     //implicit conversion
     operator int() const { return 7; }
@@ -27,16 +28,17 @@ struct X {
     //operator arr_t () const; // Error: conversion to array not allowed in any case
 };
 
-void test1()
+void test_cast()
 {
+    cout << "------ cast test" <<endl;
     X x;
- 
     int n = static_cast<int>(x);   // OK: sets n to 7
     int m = x;                     // OK: sets m to 7
 
-    cout << n << "   " << m << "\n";
+    cout << "n: " <<n << " m: " << m <<endl;
 }
 
+/**  */ 
 #include <iostream>
 #include <typeinfo>
 struct Base1 {/** polymorphic type: declares a virtual member */ 
@@ -44,43 +46,48 @@ struct Base1 {/** polymorphic type: declares a virtual member */
 };
 struct Derived1 : Base1 {/** polymorphic type: inherits a virtual member */ 
 };
- 
-struct Base2 {/** non-polymorphic type*/ 
+
+struct Base {/** non-polymorphic type*/ 
+    int m_id;
+    Base(int a=0):m_id(a){ cout << "base constr" <<endl;}
 };
-struct Derived2 : Base2 {/** non-polymorphic type */ 
+struct Derived : Base {/** non-polymorphic type */ 
+    double m_d;
+    Derived(double a=0,int id=0):m_d(a),Base(id){cout << "derived constr" <<endl;}
 };
  
-void test2()
+void test_inherite()
 {
+    cout << "------ Class inheritance test. " <<endl;
     Derived1 obj1; // object1 created with type Derived1
-    Derived2 obj2; // object2 created with type Derived2
+    Derived obj2; // first call base constr; then call derived constr
  
     Base1& b1 = obj1; // b1 refers to the object obj1
-    Base2& b2 = obj2; // b2 refers to the object obj2
+    Base& b2 = obj2; // b2 refers to the object obj2
  
-    std::cout << "Expression type of b1: " << typeid(decltype(b1)).name() << ' '
+    std::cout << "Expression type of b1: " << typeid(decltype(b1)).name() << '\n'
               << "Expression type of b2: " << typeid(decltype(b2)).name() << '\n'
-              << "Object type of b1: " << typeid(b1).name() << ' '  /** virtual; derived */ 
+              << "Object type of b1: " << typeid(b1).name() << '\n'  /** virtual; derived */ 
               << "Object type of b2: " << typeid(b2).name() << '\n' /** no virtual: base */ 
-              << "size of b1: " << sizeof b1 << ' '
+              << "size of b1: " << sizeof b1 << '\n'
               << "size of b2: " << sizeof b2 << '\n';
 }
 
 struct S1 {
-    static int x ; // static data member 只是申明
+    static int x ; // static data member ; only declare
     // a definition outside of class is required if it is odr-used
 };
-int S1::x = 23;  //定义
-
+int S1::x = 23;  //real define
 struct S2 { S2(std::string) {} }; // implicitly convertible from std::string
 
 
-int f1(int a)
-{cout <<"f1 called :" << a <<"\n";} 
+int f1(int a) {
+    cout <<"f1 called :" << a <<"\n";
+} 
 
 /**  */ 
 class X1 {
-    public:
+public:
     static int a; 
     int mem1(int i = a){cout << i <<"\n";}; 
     using fp1 = int(*)(int);
@@ -92,7 +99,7 @@ int X1::a = 10;
 class enclose { // enclosing class
     int x; // note: private members
     static int s;
- public:
+public:
     struct inner { // nested class
         void f(int i) {
             s = i; 
@@ -108,7 +115,6 @@ struct AA{
     int x;
     AA(int x = 1): x(x) {cout <<"aa called :" << x <<"\n";} // user-defined default constructor
 };
-
 struct EE: AA
 {
     EE(int y): AA(y) {}
@@ -148,33 +154,11 @@ template<int I, int J, class T> struct X5 {
 /********************* 
  *
  * */ 
-int main()
+
+/**  */ 
+void test_template()
 {
-    /**  */ 
-    test1();
-
-    /** 多态  */ 
-    test2();
-
-    /** static */
-    S1::x = 55;
-    cout << S1::x << "\n";
-
-    /** initalize */ 
-    S2 s1("abc"); // OK: conversion from const char[4] to std::string
-    //S2 s2 = "abc"; // Error: no conversion from const char[4] to S
-    // S2 s = "abc"s; // error: conversion from std::string to S
-    int n = 1;
-    double&& copy_ref = n; // bind to an rvalue temporary with value 1.0
-    
-    /** constructor */  
-    X1 x1;
-    x1.mem1();
-    X1::a = 100;
-    x1.mem1();
-
-    EE e;
-    
+    cout << "---- test for template." <<endl;
     /** template */ 
     //W<b> w; // eror: no conversion
     //int * pai = const_cast<int * >(ai);
@@ -189,15 +173,39 @@ int main()
     X5<2,3,int> x5;
     x5.f(852);
 
-    /** const pioint */ 
-    int i2;
-    const int *cp = &i2; // 指针指向 常量
-    //*cp = 23; //error readonly
-    int *p = const_cast<int *>(cp);
-    *p = 10;
-    int * const cp2 = p; // here the static_cast is optional
-    //cp2 = &i2;  //error readonly
-    cout << i2 << "\n";
+}
 
+void constr_test()
+{ /** constructor */  
+    X1 x1;
+    x1.mem1();
+    X1::a = 100;
+    x1.mem1();
+    
+    EE e;
+}
+
+int main()
+{
+    /**  */ 
+    test_cast();
+
+    /** 多态  */ 
+    test_inherite();
+
+    /** static */
+    S1::x = 55;
+    cout << S1::x << "\n";
+
+    /** initalize */ 
+    S2 s1("abc"); // OK: conversion from const char[4] to std::string
+    //S2 s2 = "abc"; // Error: no conversion from const char[4] to S
+    // S2 s = "abc"s; // error: conversion from std::string to S
+    int n = 1;
+    double&& copy_ref = n; // bind to an rvalue temporary with value 1.0
+    
+    constr_test();
+    /**  */ 
+    test_template();
     
 }
