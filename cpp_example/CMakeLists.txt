@@ -33,7 +33,8 @@ SET(MY_SRCS
     #cppProLan/cast.cpp
     #cppProLan/class.cpp
     #cppProLan/inherit.cpp
-    cppProLan/template.cpp
+    #cppProLan/template.cpp
+    cppProLan/exception.cpp
     #cppProLan/algorithm.cpp
     #cppProLan/contain.cpp
     #cppProLan/stl.cpp

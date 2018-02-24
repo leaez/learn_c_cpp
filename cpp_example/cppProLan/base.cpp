@@ -247,15 +247,7 @@ void lambda_func_test()
     cout << "lamada func: " <<  fz1(12) <<endl;
 }
 
-void exception_test(){
-    cout << "************* exception test. " << endl;
-    /** exception  */ 
-    struct Some_error { };
-    try{ throw Some_error{};
-    }catch(Some_error){
-        cout << "catch some exception!\n";
-    }
-}
+
 
 /********************* 
  *
@@ -268,8 +260,6 @@ int main(int argc, char *argv[])
     /**  */
     lambda_func_test();
 
-    /**  */ 
-    exception_test();
     //abort();
     if (argc ==0){
         cout << "no args\n";
