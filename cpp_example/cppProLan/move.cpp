@@ -8,6 +8,7 @@
 #include <functional>
 #include <utility>
 #include <string>
+#include <memory> // for std::unique_ptr
 
 
 using namespace std;
@@ -15,142 +16,159 @@ using namespace std;
 
 
 /** default constructor，  */ 
-/*
-struct A
-{
-    int x;
-    A(int x = 1): x(x) {} // user-defined default constructor
-    //A() 该constr is not declared because another constructor exists
-    A(const A& a) : x(a.x) { } // user-defined copy ctor
-    //A(A&& o) noexcept : x(std::move(o.x)) { cout << "move constr called \n"; }
-    A& operator=(A&& other) {   //"move assigned\n";
-        cout <<"move assigned\n";
-         x = std::move(other.x);
-         return *this;
-    }
-};
-*/
-struct A
-{
-    std::string s;
-    A() : s("test") { }
-    A(const A& o) : s(o.s) { std::cout << "copy cons!\n"; }
-    A(A&& o) : s(std::move(o.s)){ std::cout << "move cons!\n"; }
-    A& operator=(const A& other){
+struct A{
+    string s;
+    A() : s("test move copy constr") { }
+    A(const A& o) : s(o.s) { /** copy constr */ 
+        cout << "copy cons!\n"; }
+    A(A&& o) : s(move(o.s)){ /** move constr */ 
+        cout << "move cons!\n"; }
+    A& operator=(const A& other){ //copy assigned
          s = other.s;
-         std::cout << "copy assigned\n";
+         cout << "copy assigned\n";
          return *this;
     }
-
-    A& operator=(A&& other)
-    {
-         s = std::move(other.s);
-         std::cout << "move assigned\n";
+    A& operator=(A&& other) { /** move assigned */ 
+         s = move(other.s);
+         cout << "move assigned\n";
          return *this;
     }
 };
 
 
-A f(A a){    return a;}
+A f(A a){
+    return a;}
 
 struct B : A {
-     std::string s2; 
+     string s2; 
      int n;    
     // implicit move constructor B::(B&&)
 };
 
-template< class T > void g(T);    // #1: overload for all types
-template<>          void g(int*); // #2: specialization of #1 for pointers to int
-template< class T > void g(T*);   // #3: overload for all pointer types
-
-template<void (*pf)(int)> struct AF {};
-template<int (pa)[5]> struct W {};
-template<const char*> struct S2 {};
-
-struct C22
-{
+struct C : B{
     int n;
-    std::string s1;
-    // user-defined copy assignment, copy-and-swap form
-    C22& operator=(C22 other)
-    {  std::cout << "copy assignment C\n";
-        std::swap(n, other.n);
-        std::swap(s1, other.s1);
-        return *this;
-    }
-}; /** 如果有pointer，use deep copy; std::copy() */ 
-
-struct C : B
-{
-    int n;
-    std::string s1;
+    string s1;
     // user-defined copy assignment, copy-and-swap form
     C& operator=(C other)
-    {  std::cout << "copy assignment C\n";
-        std::swap(n, other.n);
-        std::swap(s1, other.s1);
+    {  cout << "copy assignment C\n";
+        swap(n, other.n);
+        swap(s1, other.s1);
         return *this;
     }
-    ~C() { } // destructor prevents implicit move assignment
+    //~C() { } // destructor prevents implicit move assignment
 };
  
-struct D : B
-{
+struct D : B{
     D() { }
     ~D() { } // destructor would prevent implicit move assignment
     D& operator=(D&&) = default; // force a move assignment anyway 
 };
-int main(int argc, char* argv[])
-{
+
+void test_move(){
+    cout <<endl;
    /** move constructor */ 
     A a1, a2;
-    cout << "a = f(A()):";
-    a1 = f(A()); // call move-construct from rvalue temporary; 如果move constructor没有就 调用A(const A&)拷贝构造函数 的move-construct from rvalue temporary
-    cout << "a = move():";
-    a2 = std::move(a1); // move-construct from xvalue如果move constructor没有就 调用A(const A&)拷贝构造函数 
+    cout << "----a = f(A()):" <<endl;
+    a1 = f(A()); // call move-construct to f()'s parameter(rvalue temporary); if no move constr,call copy constr
+        //f() return rvalue temporary && ,will call move assigned , move to a1
+    
+    cout << "----a = move():"<<endl;
+    a2 = move(a1); // move-assignment from xvalue, if no move assignment,call A(const A&) copy constr
 
-    cout << "A a = move():";
-    A a3 = std::move(a1); // move-assignment from xvalue如果move constructor没有就 调用A(const A&)拷贝构造函数 
+    cout << "----A a = move():"<<endl;
+    A a3 = move(a1); // move-construct from xvalue,if no move constructor, call A(const A&) copy constr
 
     B b1, b2;
-    cout << "b = move():";
-    b2 = std::move(b1); // calls implicit move ctor如果move constructor没有就 调用A(const A&)拷贝构造函数 
-
+    cout << "----b = move():" <<endl;
+    b2 = move(b1); // calls implicit move constr, if no move constructor,call A(const A&)copy constr 
     C c1, c2;
     //c1 = c2;  // user-defined copy assignment
-    cout << "c = move():";
-    c1 = std::move(c2);
+    cout << "----c = move():" <<endl;
+    c1 = move(c2);
 
-    std::cout << "Trying to move-assign D\n";
+    cout << "----Trying to move-assign D\n";
     D d1, d2;
-    d2 = std::move(d1);
+    d2 = move(d1);
 
-    /** template  */ 
-    const int bt[5] = {1, 3 ,3, 4, 4};
-    //W<bt> w; //error : no conversion
-    
-    //S2<"fail"> s2; // error: string literal cannot be used
-    //char okay[] = "okay"; // static object with linkage
-    //S2< &okay[0] > s2; // error: array element has no linkage
-    //S2<okay> s2; // error
 
-    //f(new int(1)); // calls #3, even though specialization of #1 would be a perfect match
+}
 
-    /** move algorithm */ 
-    std::vector<std::string> foo = {"air","water","fire","earth"};
-    std::vector<std::string> bar (4);
-    
-    std::copy(foo.begin(), foo.begin()+4,  back_inserter(bar));
-    
+/** 
+ *
+ * */ 
+void test_std_copymove(){
+    cout <<endl;
+    /** copy algorithm */ 
+    vector<string> foo = {"air","water","fire","earth"};
+    vector<string> bar (4);
+    copy(foo.begin(), foo.begin()+4,  back_inserter(bar));
     // moving ranges:
-    std::cout << "Moving ranges..."<< bar.size() <<"\n";
-    std::move ( foo.begin(), foo.begin()+4, bar.begin() );
+    cout << "----Moving ranges size "<< bar.size() <<"\n";
+    move (foo.begin(), foo.begin()+4, bar.begin() );
+    for(auto x: bar){cout << x << "/ ";}
+    cout << "\n";
 
-    for(auto x: bar){cout << x << " ";}
-    std::cout << "\n";
+}
 
 
-    
+/************************
+ * */ 
+
+template<class T>
+void swap1(T& a, T& b) { 
+  T tmp { std::move(a) }; // move constructor
+  a = std::move(b); // move assignment
+  b = std::move(tmp); // move assignment
+}
+ 
+void test_swap_move(){
+    cout <<endl;
+	std::string x{ "aaa"};	std::string y{ "bbb"};
+ 	std::cout << "x: " << x <<  ";  y: " << y << '\n';
+	swap1(x, y);
+ 	std::cout << "x: " << x <<  ";  y: " << y << '\n';
+}
+
+/***********************
+ *
+ * */ 
+class Resource{
+public:	Resource() { std::cout << "Resource acquired\n"; }
+    void print(){cout << "I am a res." <<endl;}
+	~Resource() { std::cout << "Resource destroyed\n"; }
+};
+ 
+void test_smart_ptr(){
+    cout <<endl;
+    /** unique_ptr */ 
+	std::unique_ptr<Resource> res1(new Resource); // Resource created here
+	std::unique_ptr<Resource> res2; // Start as nullptr
+ 	std::cout << "res1 is " << (static_cast<bool>(res1) ? "not null\n" : "null\n");
+	std::cout << "res2 is " << (static_cast<bool>(res2) ? "not null\n" : "null\n");
+ 	// res2 = res1; // Won't compile: copy assignment is disabled
+	res2 = std::move(res1); // res2 assumes ownership, res1 is set to null
+ 	std::cout << "res1 is " << (static_cast<bool>(res1) ? "not null\n" : "null\n");
+	std::cout << "res2 is " << (static_cast<bool>(res2) ? "not null\n" : "null\n");
+
+    /** shared_ptr */ 
+    Resource *res = new Resource;
+	std::shared_ptr<Resource> ptr1(res);
+	{	std::shared_ptr<Resource> ptr2(ptr1); // use copy initialization std::shared_ptr point to the same res
+	} // ptr2 goes out of scope 
+} 
+
+
+
+int main(int argc, char* argv[])
+{
+    /**  */ 
+    test_move();
+    /**  */ 
+    test_std_copymove();
+    /**  */ 
+    test_swap_move();
+    /**  */ 
+    test_smart_ptr();
     return 0;
 }
 

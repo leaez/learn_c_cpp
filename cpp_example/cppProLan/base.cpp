@@ -103,6 +103,7 @@ int basic_test()
     srand(5); // set initial seed value to 5323  only called one time;
     for (int count=0; count < 5; ++count) 
         std::cout << rand() << "\t"; /**  0 and RAND_MAX */ 
+    static_assert(sizeof(long) == 8, "long must be 8 bytes"); //while compile
 
     /** array */ 
     int array[] = { 13, 1, 21, 3, 5, 8, 1, 2 };  // initializer list
@@ -164,22 +165,30 @@ int basic_test()
     return 0;
 }
 
-void basic_test2(){
+void test_pointer_ref(){
     cout << "************* basic test2 : ref/pointer/ " << endl;
     /** Dynamic alloc mem */ 
     int *array = new int[3];
     delete[] array;
 
-    /** pointer */
+    /** const pioint */ 
     int abc = 123;
-    const int *cp= const_cast<int *>(&abc); // cast to const
-    //constexpr int *cp= &abc;
+    const int *ptr_c= const_cast<const int *>(&abc); // cast to const
+    //*ptr_c = 23; //error readonly
+    const int *ptr_c2 = &abc; // ptr point to const int
+    int *p = const_cast<int *>(ptr_c); //remove const
+    *p = 10;
+    int * const cp2 = p; // here the static_cast is optional
+    cout << "change throw ptr: "<< abc << "\n";
+
+    /** pointer */
+    //constexpr int *ptrc= &abc;
     const int valc = 5;  int val1=1; int val2 = 2;
     int *ptr = &val2;
     int **ptrptr = &ptr;
-    const int *ptr_c = &valc; // okay, ptr pointing to a "const int"
+    const int *ptr_c1 = &valc; // okay, ptr pointing to a "const int"
 
-    ptr_c = &val2; // ok too, but    *ptr_c = 12; error
+    ptr_c1 = &val2; // ok too, but    *ptr_c1 = 12; error
     //int *const c_ptr = &value; //error; is a const ptr
     std::cout << "ptr:" << **ptrptr <<endl; // dereference pointer to int to get int value
     int **arr_p = new int*[10]; // allocate an array of 10 int pointers
@@ -188,15 +197,6 @@ void basic_test2(){
     int (*fcnPtr)() = returnByValue; // assign fcnPtr to function foo
     (*fcnPtr)(); // call function foo(5) through fcnPtr.
 
-    /** const pioint */ 
-    int i2;
-    const int *cp = &i2; // 指针指向 常量
-    //*cp = 23; //error readonly
-    int *p = const_cast<int *>(cp);
-    *p = 10;
-    int * const cp2 = p; // here the static_cast is optional
-    //cp2 = &i2;  //error readonly
-    cout << i2 << "\n";
 
     /** reference */ 
     const int &ref = valc; // ref is a reference to const value;  = val2; =5;(r-value) //ok
@@ -205,20 +205,30 @@ void basic_test2(){
     int &ref1 = val2; //ok ;  = valc;error ref to non const
     ref1 = val1; /** only: val2=1; can not be changed to reference another variable  */ 
     std::cout << "ref val2:" << val2 <<endl; // dereference pointer to int to get int value
+    
+    /** l-value reference */ 
+    int x; 	int &ref2 = x; // ok
+	//int &ref3 = 5; // error  can't from an rvalue
+	const int &refc1 = x; // C
+	const int &refc2 = 5; // D
     //int &ref2 = returnByValue(); //error ; r-value  can't bind to a non-const reference
-    int &ref2 = returnByReference(); //ok
-    const int &ref3 = returnByReference(); // ok
+    int &ref4 = returnByReference(); //ok
+    const int &refc3 = returnByReference(); // ok
     int rvalue = returnByReference();
 
     assert(returnByReference()>0 && "Car could not be found in database");
-    static_assert(sizeof(long) == 8, "long must be 8 bytes"); //while compile
-
-    int n = 1;
+    /** r-value */ 
+    int n = 1;  const int xc= 12;
     double&& copy_ref = n; // bind to an rvalue temporary with value 1.0
+	//int &&rref1 = x; // error can't from lvalue to 
+	int &&rref2 = 5; // 
+	//const int &&rrefc1 = x; // error  can't lvalue to ‘const int&&’
+	//const int &&rrefc2 = xc; // error  can't lvalue to ‘const int&&’
+	const int &&rrefc3 = 5; // 
     
 }
 
-void lambda_func_test()
+void test_lambda_func()
 {
     cout << "************* lambda test. :lambda " << endl;
     /** lambda, function  */ 
@@ -256,9 +266,10 @@ int main(int argc, char *argv[])
 {
     /**  */ 
     basic_test();
-    basic_test2();
+    /**  */ 
+    test_pointer_ref();
     /**  */
-    lambda_func_test();
+    test_lambda_func();
 
     //abort();
     if (argc ==0){
