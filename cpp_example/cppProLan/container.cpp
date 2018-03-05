@@ -14,10 +14,14 @@
 #include <cstring>
 
 using namespace std;
-
+template <typename T> 
+void printv(T &vi){
+    for (auto& x :  vi) // implicit use of v.begin() and v.end()
+        cout << x << "," ; cout << '\n';
+}
 
 /** vector */ 
-void vector_test()
+void test_vector()
 {
     /**  */ 
     cout << "----------------vector test"<<endl;
@@ -38,67 +42,55 @@ void vector_test()
     cout <<"after copy:" << x[0] << x[1] << endl;
     y = std::move(x); // we get a move
     cout <<"after move:" << y[0] << y[1] << endl;
+    //cout  << x[1] ; //error! after move  is delete!!
 
     vector<int> vi1 {1,3,5,7,9,7,5,3}; // vector initialized by five ints
     vi1[15] = 2; // no bounds checking!!!
     vi1.at(7) = 3; // does bounds checking ; throw std::out_of_range
-    vi1.resize(5); 
+    vi1.resize(5); //1,3,5,7,9
     vector<string> vs(7); // vector initialized by seven empty strings
     vector<int> vi2;
     vi2 = {2,4,6,8,6,4,2}; // assign sequence of four ints to vi2
     auto cnt = find_if(vi1.begin(),vi1.end(),[](int& x) { return (x==7);}) ;
-    cout << *cnt << "if\n"; /**返回 iterator */ 
-    replace(vi1.begin(),vi1.end(),3,8);
-    
+    if(cnt != vi1.end())
+        cout <<"find:" << *cnt << endl; /**return iterator */ 
+    replace(vi1.begin(),vi1.end(),3,8); //1,3,5,7,9 -> 1, 8, 5, 7, 9, 
     //generate(begin(vi2),end(vi2),Randint{});
-    for (auto& x : vi1) // implicit use of v.begin() and v.end()
-        cout << x ; cout << '\n';
+    printv(vi1);
+    vi2.assign(&vi1[1],&vi1[4]); // assign the sequence 8,5,7 to vi2(resize to 3)
+    vi2.push_back(100);
+    printv(vi2);
+    vi1.assign(3,11); printv(vi1); // vi1: 11,11,11 
+    vi2.pop_back(); cout << "vi2:"; printv(vi2);
 
-    vi2.assign(&vi1[1],&vi1[4]); // assign the sequence 3,5,7 to vi2
+
     vector<string> vs2;
     vs2 = {"The Eagle", "The Bird and Baby"}; // assign two str ings to vs2
     //vs2.assign("The Bear","The Bull and Vet");// run-time error
-    cout << vi2.size() << vi2.capacity() << "\n";
-
-
-
+    cout <<"vs size:" << vs2.size() << "cap:" << vs2.capacity() << "\n"; //2; 2
 
 }
 
 
 /**  */ 
-void array_test(){
+void test_array(){
     /** array  */ 
     cout << "-----------------array test :\n";
-    std::array<int, 3> a2 = {1, 5, 3};
+    std::array<int, 3> a2 = {1, 5 }; printv(a2); // 1,5,0 
     std::sort(a2.begin(), a2.end());
-    std::array<int, 3> a1 {1, 2, 3} ; //  in C++11 
-    array<string, 4> aa = {"Churchill", "Clare"};
-    for (auto& x : a1) // implicit use of v.begin() and v.end()
-        cout << x << '\n';
-    cout <<"size:" << aa.size() << "at:" << aa.at(1) <<endl;
+    std::array<int, 3> a1 {1, 2, 3} ; //  in C++11
+    cout << "a1:" << a1.back() << a1.front() <<", size:" <<a1.size() <<endl; 
+    array<string, 4> as = {"Churchill", "Clare"};//Churchill,Clare,,, 2 empty
+    printv(as);
+    cout <<"size:" << as.size() << "at:" << as.at(1) <<endl;
+    as.fill("fill");
+    printv(as);
+
     
 }
 
-
-/********************* 
- *
- * */ 
-int main()
+void test_map()
 {
-    /**  */ 
-    vector_test();
-    /**  */ 
-    array_test();
-
-    /** set */ 
-    cout << "-------------set:\n";
-    std::unordered_set<int> example = {1, 2, 3, 4};
-    auto search = example.find(2);
-    if(search != example.end()) {
-        std::cout << "unordered set Found " << (*search) << '\n';
-    }
-
     /** map emplace */ 
     cout << "-------------map\n";
     std::map<std::string, std::string> m;
@@ -112,6 +104,34 @@ int main()
     for (const auto &p : m) {
         std::cout << p.first << " => " << p.second << '\n';
     }
-   
+
+
+}
+
+void test_set(){
+    /** set */ 
+    cout << "-------------set:\n";
+    std::unordered_set<int> example = {1, 2, 3, 4};
+    auto search = example.find(2);
+    if(search != example.end()) {
+        std::cout << "unordered set Found " << (*search) << '\n';
+    }
+
+}
+
+/********************* 
+ *
+ * */ 
+int main()
+{
+    /**  */ 
+    test_vector();
+    /**  */ 
+    test_array();
+
+    /** set */ 
+    test_set();
+    /**  */ 
+    test_map();
 
 }

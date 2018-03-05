@@ -240,7 +240,7 @@ void test_lambda_func()
     c.erase(std::remove_if(c.begin(), c.end(), [x](int n) {return n < x; }), /**lambda as judge  */ 
             c.end());
     std::for_each(c.begin(), c.end(), [](int i){ 
-        std::cout << i<< ' '; });
+        std::cout << i<< '/'; });
     std::cout << '\n';
     std::function<int(int)> func2 = [](int i) { /** lambda to func name */ 
         return i + 4; };
@@ -248,13 +248,22 @@ void test_lambda_func()
 
     /** lamada  */ 
     double (*fp1)(double) = [](double a) { return sqrt(a); };
-    double (*fp2)(double) = [&](double a) { return sqrt(a); }; //  : the lambda captures
+    //double (*fp2)(double) = [=](double a1) { return sqrt(a)+a1; }; //  : the lambda captures
     //double (*fp3)(int) = [](int a) { return sqrt(a); }; //  
     auto fp3 = [](int a) { return sqrt(a); }; // 
-    cout << "lamada func: " <<  fp3(2.2) <<endl;
+    cout << "lamada func: " <<  fp1(1.2) <<endl;
+    cout << "lamada func: " <<  fp3(3) <<endl;
     int y = 10;
     auto fz1 = [=](int su){ if (su) return su; else return 2; };
     cout << "lamada func: " <<  fz1(12) <<endl;
+    /**  */ 
+    int r = 10, v = 20;  
+    auto by_ref = [&](){ r++;  };  //no mutable also works, 
+    //auto by_ref = [&]()mutable{ j++; cout << "lambda j: " << j << endl; };  
+    auto by_val = [v]()mutable{ v++; };  //no mutable error !!
+    by_ref(); /** r changed */  
+    by_val(); /** v not changed */ 
+    cout << "r: " << r << "; v: " << v << endl;
 }
 
 

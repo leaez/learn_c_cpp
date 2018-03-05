@@ -36,9 +36,9 @@ SET(MY_SRCS
     #cppProLan/template.cpp
     #cppProLan/exception.cpp
     #cppProLan/move.cpp
-    cppProLan/string.cpp
+    #cppProLan/string.cpp
+    cppProLan/container.cpp
     #cppProLan/algorithm.cpp
-    #cppProLan/contain.cpp
     #cppProLan/stl.cpp
     #cppProLan/thread.cpp
     #cppProLan/utility.cpp
