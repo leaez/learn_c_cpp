@@ -39,12 +39,12 @@ SET(MY_SRCS
     #cppProLan/string.cpp
     #cppProLan/container.cpp
     #cppProLan/algorithm.cpp
-    #cppProLan/stl.cpp
+    cppProLan/stl.cpp
     #cppProLan/thread.cpp
     #cppProLan/utility.cpp
     #cppProLan/regex.cpp
 
-    cppProLan/clib.c
+    #cppProLan/clib.c
 
 )
 
