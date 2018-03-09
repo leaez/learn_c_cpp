@@ -1,9 +1,12 @@
 #include <iostream>
 #include <fstream>
+#include <vector>
 #include <array>
+#include <list>
+#include <stack>
+#include <queue>
 #include <map>
 #include <tuple>
-#include <vector>
 #include <cstddef>
 #include <algorithm>
 #include <functional>
@@ -17,7 +20,7 @@ using namespace std;
 template <typename T> 
 void printv(T &vi){
     for (auto& x :  vi) // implicit use of v.begin() and v.end()
-        cout << x << "," ; cout << '\n';
+        cout << x << "," ; cout << endl;
 }
 
 /** vector */ 
@@ -27,7 +30,7 @@ void test_vector()
     cout << "----------------vector test"<<endl;
     int v[] = {0,1,2,3,4,5,6,7,8,9};
     for (auto x : v) // for each x in v
-        cout << x << ' ';       cout << '\n';
+        cout << x << ' ';       cout << endl;
 
     std::vector<int> vl = {1, 2, 3, 4, 5, 6, 7};
     for(const int &i : vl) // access by const reference
@@ -47,6 +50,9 @@ void test_vector()
     vector<int> vi1 {1,3,5,7,9,7,5,3}; // vector initialized by five ints
     vi1[15] = 2; // no bounds checking!!!
     vi1.at(7) = 3; // does bounds checking ; throw std::out_of_range
+    try{ vi1.at(15) = 3; // does bounds checking ; throw std::out_of_range
+    }catch(exception &e){ 
+        cout <<"excption :" << e.what() <<endl; }
     vi1.resize(5); //1,3,5,7,9
     vector<string> vs(7); // vector initialized by seven empty strings
     vector<int> vi2;
@@ -79,6 +85,7 @@ void test_array(){
     std::array<int, 3> a2 = {1, 5 }; printv(a2); // 1,5,0 
     std::sort(a2.begin(), a2.end());
     std::array<int, 3> a1 {1, 2, 3} ; //  in C++11
+    a1[0] = 111; a1.at(2) = 333;
     cout << "a1:" << a1.back() << a1.front() <<", size:" <<a1.size() <<endl; 
     array<string, 4> as = {"Churchill", "Clare"};//Churchill,Clare,,, 2 empty
     printv(as);
@@ -87,6 +94,82 @@ void test_array(){
     printv(as);
 
     
+}
+
+
+void test_deque ()
+{
+    cout << "-------------deque:\n";
+    deque<int> first;                                // empty deque of ints
+    deque<int> second (4,100);                       // four ints with value 100
+    second[0] = 11; second.at(1) = 22;
+    second.back() = 44; second.front() = 0;
+    first.assign(5,123); // 5's 123 
+    first.push_back(456);
+    first.pop_front();
+    printv(first);
+    printv(second);
+    deque<int>::iterator it = first.begin();  ++it;
+    first.insert(it,789);
+    first.emplace(first.end(),999);
+    printv(first);
+
+}
+
+void test_list(){
+    cout << "-------------list:\n";
+    list<int> l = { 1,100,2,3};
+    list<int> first;                                // empty list of ints
+    list<int> second (4,100);                       // four ints with value 100
+    second.front() = 0;second.back() = 444;
+    first.assign (3,100);
+    first.pop_front(); first.push_back(123);
+    printv(first);
+    list< std::pair<int,char> > mylist;
+    mylist.emplace (mylist.begin(), 100, 'x' );
+    first.splice(first.end(),second); /**moves elements from another list; second empty */ 
+    printv(first); printv(second);
+    second.assign({1,2,3,4});
+    list<int>::iterator it = second.begin(); it++;
+    first.splice(first.end(),second,it,second.end()); //2,3,4 move to first ; second only:1,
+    printv(first); printv(second);
+    first.unique();printv(first);//	removes consecutive duplicate elements (only adjacent element same)
+    first.sort(); printv(first);
+    
+    first.remove(0);
+    first.remove_if([](int n){ return n > 100; });
+    printv(first);
+    first.merge(second); printv(first);
+
+}
+
+void test_set(){
+    /** set */ 
+    cout << "-------------set:\n";
+    set<int> first = {1, 2, 3, 4};
+    set<int> second;
+    second = first;
+    auto search = first.find(2);
+    if(search != first.end()) {
+        std::cout << "set Found " << (*search) << endl;  }
+    second.emplace(111);
+    auto it = second.begin();
+    second.erase(it);
+    //second.count(3) /** only c++14 */ 
+    printv(first);printv(second);
+}
+
+void test_multiset(){
+    cout << "-------------multiset:\n";
+    multiset<int> first {3, 1, 4, 6, 5, 9};
+    multiset<int> second = first;
+    first.emplace(5);
+    printv(first); /** sort out: 1,3,4,5,5,6,9 */ 
+    auto search = first.find(5);
+    if(search != first.end()) {
+        std::cout << "Found "  << first.count(5) <<": "<< (*search) << endl;
+    } else { std::cout << "Not found\n";}
+
 }
 
 void test_map()
@@ -101,21 +184,54 @@ void test_map()
     m.emplace(std::piecewise_construct,
               std::forward_as_tuple("c"),
               std::forward_as_tuple(10, 'c'));
-    for (const auto &p : m) {
-        std::cout << p.first << " => " << p.second << '\n';
-    }
-
+    for (const auto &p : m) {cout << p.first << " => " << p.second << endl;}
+    m.at("a") = "aaa";
+    m["b"] = "bbb";
+    for(auto it = m.begin(); it != m.end(); ++it){
+        if(0==strcmp(it->first.c_str(),"a")) 
+            it = m.erase(it);}
+    for (const auto &p : m) {cout << p.first << " => " << p.second << endl;}
+    auto search = m.find("b"); //find key
+    if(search != m.end()) {
+        std::cout << "map Found " << search->second << endl;  }
 
 }
+void test_multimap(){
+    cout << "-------------multimap\n";
+    multimap<int, int> m = {{1,1},{2,2},{3,3},{4,4},{5,5},{4,4},{3,3},{2,2},{1,1}};
+    for(auto& p: m) std::cout << p.first << "=>" << p.second <<"; " ; cout << endl;
+    cout <<"count for key 3 maps:" << m.count(3) <<endl;
+    m.emplace(std::make_pair(6,10 ));
+    m.emplace(7,17);
+    for(auto& p: m) std::cout << p.first << "=>" << p.second <<"; " ; cout << endl;
+    auto search = m.find(5); //find key
+    if(search != m.end()) {
+        std::cout << "set Found " << search->second << endl; }
+}
 
-void test_set(){
-    /** set */ 
-    cout << "-------------set:\n";
-    std::unordered_set<int> example = {1, 2, 3, 4};
-    auto search = example.find(2);
-    if(search != example.end()) {
-        std::cout << "unordered set Found " << (*search) << '\n';
-    }
+/**
+ * unordered_set (C++11)	collection of unique keys, hashed by keys
+ * unordered_map(C++11)	collection of key-value pairs, hashed by keys, keys are unique 
+ * */ 
+
+void test_stack(){
+    cout << "-------------stack\n";
+    stack<int> s;
+    s.push(5);
+    s.emplace(123); // in-place at the top 
+    cout << "s size:" << s.size() <<"; top:" << s.top()<<endl ;
+    s.pop();
+
+}
+void test_queue(){ //fifo first in first out
+    cout << "-------------queue\n";
+    deque<int> deq {3, 1, 4, 1, 5}; //3 is first 
+    queue<int> q(deq);
+    cout <<"f:"<< q.front() <<", b:" << q.back() <<", s:" << q.size() <<endl;
+    q.push(123); // at end
+    cout <<"f:"<< q.front() <<", b:" << q.back() <<", s:" << q.size() <<endl;
+    q.pop(); //remove first , return void 
+    cout <<"f:"<< q.front() <<", b:" << q.back() <<", s:" << q.size() <<endl;
 
 }
 
@@ -124,14 +240,26 @@ void test_set(){
  * */ 
 int main()
 {
-    /**  */ 
+/** Sequence containers: */
     test_vector();
     /**  */ 
     test_array();
+    /**  */ 
+    test_deque();
+    /**  */ 
+    test_list();
+
 
     /** set */ 
     test_set();
+    test_multiset();
     /**  */ 
     test_map();
+    test_multimap();
+
+    /**  */ 
+    test_stack();
+    test_queue();
+
 
 }
