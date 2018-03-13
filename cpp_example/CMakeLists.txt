@@ -38,10 +38,10 @@ SET(MY_SRCS
     #cppProLan/move.cpp
     #cppProLan/string.cpp
     #cppProLan/container.cpp
-    #cppProLan/algorithm.cpp
-    cppProLan/stl.cpp
-    #cppProLan/thread.cpp
+    #cppProLan/numeric.cpp
     #cppProLan/utility.cpp
+    cppProLan/algorithm.cpp
+    #cppProLan/thread.cpp
     #cppProLan/regex.cpp
 
     #cppProLan/clib.c
