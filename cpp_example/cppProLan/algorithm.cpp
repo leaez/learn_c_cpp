@@ -148,6 +148,18 @@ void test_partition(){
 
 void test_sort(){
     MARK;
+    int digits[] = {3, 1, 4, 1, 5};
+    cout << is_sorted(std::begin(digits), std::end(digits)) << '\n';
+    sort(std::begin(digits), std::end(digits));
+    cout << is_sorted(std::begin(digits), std::end(digits)) << '\n';
+    array<int, 10> s{5, 7, 4, 2, 8, 6, 1, 9, 0, 3};
+    partial_sort(s.begin(), s.begin() + 3, s.end());
+    printv(s);
+    vector<int> v{5, 6, 4, 3, 2, 6, 7, 9, 3};
+    std::nth_element(v.begin(), v.begin() + v.size()/2, v.end());
+    std::cout << "The median is " << v[v.size()/2] << '\n';
+    std::nth_element(v.begin(), v.begin()+1, v.end(), std::greater<int>());
+    std::cout << "The second largest element is " << v[1] << '\n';
 
 
 
@@ -185,6 +197,7 @@ int main(){
     /**  */ 
     test_partition();
     /**  */ 
+    test_sort();
     test_numeric();
     /**  */ 
 
