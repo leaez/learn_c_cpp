@@ -22,12 +22,12 @@ void printv(T &vi){
 //#define MARK (printf("--------------%s (%d) - <%s>\n",__FILE__,__LINE__,__FUNCTION__)) 
 #define MARK (cout << "--------------" <<'('<<__LINE__<<')' << '<' << __FUNCTION__ << '>' <<endl) 
 
-vector<int> v{0, 1, 2, 3, 4, 5,6};
-vector<int> v1(3, 3);
-vector<int> v2(15, 4);
 
 void test_sequantial_access(){
     MARK;
+    vector<int> v{0, 1, 2, 3, 4, 5,6};
+    vector<int> v1(3, 3);
+    vector<int> v2(15, 4);
     /** all_of */ 
     if (all_of(v.cbegin(), v.cend(), [](int i){ return i % 2 == 0; })) {
         cout << "All numbers are even\n";    }
@@ -57,6 +57,8 @@ void test_sequantial_access(){
     auto serch = search(cont.begin(), cont.end(), ss.begin(), ss.end());
     if(serch != cont.end())
         cout << "search get elements"<< serch-cont.end() <<"\n";
+    if (binary_search(v.begin(), v.end(), 3)){/**if an element exists in a certain range   */ 
+        cout << "got 3 "<<endl; }
 
 }
 
@@ -156,38 +158,60 @@ void test_sort(){
     partial_sort(s.begin(), s.begin() + 3, s.end());
     printv(s);
     vector<int> v{5, 6, 4, 3, 2, 6, 7, 9, 3};
-    std::nth_element(v.begin(), v.begin() + v.size()/2, v.end());
-    std::cout << "The median is " << v[v.size()/2] << '\n';
+    std::nth_element(v.begin(), v.begin() + v.size()/2, v.end()); /** nth = v.size()/2, */ 
+    printv(v); /** after sort : before nth will smaller than nth; after nth will bigger than nth */ 
     std::nth_element(v.begin(), v.begin()+1, v.end(), std::greater<int>());
     std::cout << "The second largest element is " << v[1] << '\n';
+    printv(v);
 
+    /**  */ 
+    std::vector<int> v1 = {1, 2, 3, 4, 5}; 
+    std::vector<int> v2 = {3, 4, 5, 6, 7}; 
+    cout << includes(v1.begin(),v1.end(),v2.begin(),v2.end()) <<endl; // v1 &&v2  must sorted range
+    vector<int> dest1;
+    set_union(v1.begin(), v1.end(),v2.begin(), v2.end(),std::back_inserter(dest1));//v1 &&v2  must sorted range
+    printv(dest1);
 
 
 }
 
-
-vector<int> a{0, 1, 2, 3, 4};
-vector<int> b{5, 4, 2, 3, 1};
 
 void test_numeric(){
     MARK;
-    partial_sum(v.cbegin(), v.cend(), v.begin());
-    cout << "Among the numbers: ";
-        
+    /** max */ 
+    cout << max(1, 9999) <<endl;
+    vector<int> v{5, 6, 4, 3, 2, 6, 7, -9, 3};
+    vector<int>::iterator result;
+    result = max_element(v.begin(), v.end());
+    cout << *result <<endl;
+    result = max_element(v.begin(), v.end(), [](int a, int b){return abs(a) < abs(b);} );
+    cout << *result <<endl;
+    pair<int, int> bounds = minmax(std::rand() % v.size(),std::rand() % v.size());
+    cout << "minmax: f:" << bounds.first << ", s:" <<bounds.second <<endl;
+    auto result1 = std::minmax_element(v.begin(), v.end()); /**  smallest and the largest elements in a range  */ 
+    std::cout << "min element at: " << (result1.first - v.begin()) << '\n';
+
+
+    /** accumulate */ 
+    cout << "accu sum:" << accumulate(v.begin(), v.end(), 0) << endl;
+    cout << "accu pro:" << accumulate(v.begin(), v.end(), 1, std::multiplies<int>())<< endl; //1 is init value
     /** product,  */ 
+    vector<int> a{0, 1, 2, 3, 4};
+    vector<int> b{5, 4, 2, 3, 1};
     int r1 = inner_product(a.begin(), a.end(), b.begin(), 0);
     cout << "Inner product of a and b: " << r1 << '\n';
-     int r2 = inner_product(a.begin(), a.end(), b.begin(), 0,
-                            plus<int>(), equal_to<int>());
+    int r2 = inner_product(a.begin(), a.end(), b.begin(), 0, plus<int>(), equal_to<int>());
     cout << "Number of pairwise matches between a and b: " <<  r2 << '\n';
 
+    adjacent_difference(v.begin(), v.end(), v.begin()); //
+    printv(v);
+    partial_sum(v.cbegin(), v.cend(), v.begin()); //
+    printv(v);
+    
+        
+
 
 }
-void test(){
-    MARK;
-
-}
-
 
 int main(){
     /**  */ 

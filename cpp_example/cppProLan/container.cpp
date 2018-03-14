@@ -17,6 +17,7 @@
 #include <cstring>
 
 using namespace std;
+#define MARK (cout << "--------------" <<'('<<__LINE__<<')' << '<' << __FUNCTION__ << '>' <<endl) 
 template <typename T> 
 void printv(T &vi){
     for (auto& x :  vi) // implicit use of v.begin() and v.end()
@@ -27,7 +28,7 @@ void printv(T &vi){
 void test_vector()
 {
     /**  */ 
-    cout << "----------------vector test"<<endl;
+    MARK;
     int v[] = {0,1,2,3,4,5,6,7,8,9};
     for (auto x : v) // for each x in v
         cout << x << ' ';       cout << endl;
@@ -81,7 +82,7 @@ void test_vector()
 /**  */ 
 void test_array(){
     /** array  */ 
-    cout << "-----------------array test :\n";
+    MARK;
     std::array<int, 3> a2 = {1, 5 }; printv(a2); // 1,5,0 
     std::sort(a2.begin(), a2.end());
     std::array<int, 3> a1 {1, 2, 3} ; //  in C++11
@@ -99,7 +100,7 @@ void test_array(){
 
 void test_deque ()
 {
-    cout << "-------------deque:\n";
+    MARK;
     deque<int> first;                                // empty deque of ints
     deque<int> second (4,100);                       // four ints with value 100
     second[0] = 11; second.at(1) = 22;
@@ -117,7 +118,7 @@ void test_deque ()
 }
 
 void test_list(){
-    cout << "-------------list:\n";
+    MARK;
     list<int> l = { 1,100,2,3};
     list<int> first;                                // empty list of ints
     list<int> second (4,100);                       // four ints with value 100
@@ -145,7 +146,7 @@ void test_list(){
 
 void test_set(){
     /** set */ 
-    cout << "-------------set:\n";
+    MARK;
     set<int> first = {1, 2, 3, 4};
     set<int> second;
     second = first;
@@ -160,7 +161,7 @@ void test_set(){
 }
 
 void test_multiset(){
-    cout << "-------------multiset:\n";
+    MARK;
     multiset<int> first {3, 1, 4, 6, 5, 9};
     multiset<int> second = first;
     first.emplace(5);
@@ -175,7 +176,7 @@ void test_multiset(){
 void test_map()
 {
     /** map emplace */ 
-    cout << "-------------map\n";
+    MARK;
     std::map<std::string, std::string> m;
     m.emplace(std::make_pair(std::string("a"), std::string("a")));
     m.emplace(std::make_pair("b", "abcd"));
@@ -197,7 +198,7 @@ void test_map()
 
 }
 void test_multimap(){
-    cout << "-------------multimap\n";
+    MARK;
     multimap<int, int> m = {{1,1},{2,2},{3,3},{4,4},{5,5},{4,4},{3,3},{2,2},{1,1}};
     for(auto& p: m) std::cout << p.first << "=>" << p.second <<"; " ; cout << endl;
     cout <<"count for key 3 maps:" << m.count(3) <<endl;
@@ -215,7 +216,7 @@ void test_multimap(){
  * */ 
 
 void test_stack(){
-    cout << "-------------stack\n";
+    MARK;
     stack<int> s;
     s.push(5);
     s.emplace(123); // in-place at the top 
@@ -224,7 +225,7 @@ void test_stack(){
 
 }
 void test_queue(){ //fifo first in first out
-    cout << "-------------queue\n";
+    MARK;
     deque<int> deq {3, 1, 4, 1, 5}; //3 is first 
     queue<int> q(deq);
     cout <<"f:"<< q.front() <<", b:" << q.back() <<", s:" << q.size() <<endl;
@@ -232,6 +233,46 @@ void test_queue(){ //fifo first in first out
     cout <<"f:"<< q.front() <<", b:" << q.back() <<", s:" << q.size() <<endl;
     q.pop(); //remove first , return void 
     cout <<"f:"<< q.front() <<", b:" << q.back() <<", s:" << q.size() <<endl;
+
+}
+
+void test_iterator(){
+    MARK;
+    /** reverse_iterator */ 
+    std::string s = "Hello, world";
+    std::reverse_iterator<std::string::iterator> r = s.rbegin(); //from end to begin
+    r[7] = 'O'; // replaces 'o' with 'O' 
+    r += 7; // iterator now points at 'O'
+    std::string rev(r, s.rend());
+    std::cout << rev << '\n';
+    /** back front inserter */ 
+    vector<int> v{1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+    generate_n(back_insert_iterator<std::vector<int>>(v), // can be simplified
+                    10, [](){ return std::rand() % 10; });        // with std::back_inserter
+    printv(v);
+    fill_n(std::back_inserter(v), 3, -1); //fill back 3's -1 //more simple than back_insert_iterator
+    printv(v);
+    deque<int> d;
+    copy(v.begin(), v.end(),front_insert_iterator<deque<int>>(d)); // or std::front_inserter(d)
+    printv(d);
+    fill_n(front_inserter(d), 3, -1);
+    printv(d);
+    vector<int> v1{8, 9, 10};
+    vector<int> l {1, 2, 3, 4, 5};
+    copy(v1.begin(), v1.end(), insert_iterator<vector<int>>(l, next(l.begin())));
+    printv(l);
+    copy(v1.begin(), v1.end(), inserter(l, next(l.begin())));//more simple than insert_iterator
+    printv(l);
+    /** advance, distance next prev */
+    auto it = l.begin();
+    advance(it, 2);    //move iter by given distance
+    printv(l);
+    cout <<"distance :" << distance(v.begin(), v.end())  <<endl; //return int 
+    it = l.begin(); 
+    auto nx = std::next(it, 2);
+    it = l.end(); auto fr = prev(it, 2);
+    cout << "next: " << *nx << ", prev: " << *fr <<endl;
+    //copy(std::rbegin(v), std::rend(v), std::ostream_iterator<int>(std::cout, " ")); //rbegin rend  c++14
 
 }
 
@@ -260,6 +301,8 @@ int main()
     /**  */ 
     test_stack();
     test_queue();
+    /**  */ 
+    test_iterator();
 
 
 }
