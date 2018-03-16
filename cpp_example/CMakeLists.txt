@@ -37,12 +37,12 @@ SET(MY_SRCS
     #cppProLan/exception.cpp
     #cppProLan/move.cpp
     #cppProLan/string.cpp
-    cppProLan/container.cpp
+    #cppProLan/container.cpp
     #cppProLan/numeric.cpp
     #cppProLan/utility.cpp
     #cppProLan/algorithm.cpp
-    #cppProLan/thread.cpp
     #cppProLan/regex.cpp
+    cppProLan/thread.cpp
 
     #cppProLan/clib.c
 

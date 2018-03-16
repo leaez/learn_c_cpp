@@ -10,6 +10,7 @@
 #include <stddef.h>     /* offsetof */
 #include <time.h>
 
+#define MARK (printf("--------------%s (%d) - <%s>\n",__FILE__,__LINE__,__FUNCTION__)) 
 int FindMax (int n, ...){
   int i,val,largest;
   va_list vl;
@@ -26,6 +27,7 @@ int FindMax (int n, ...){
 
 
 void test_clib (){
+    MARK;
     char str[]="1776ad";
     int year;
     /** isdigit  */ 
@@ -57,13 +59,16 @@ void test_clib (){
     /** rand */
     int i;    srand (time(NULL)); //seed
     for(i=1; i<=5;i++) printf(": %d", rand()); printf("\n");
-    /**  */ 
-
-
+    /** qsort */ 
+    int values[] = { 40, 10, 100, 90, 20, 25 };
+    int compare (const void * a, const void * b) { return ( *(int*)a - *(int*)b ); }
+    qsort (values, 6, sizeof(int), compare); int n;
+    for (n=0; n<6; n++)  printf ("%d ",values[n]); printf("\n");
 
 }
 
 void test_io(){
+    MARK;
     printf("\n");
     char str [80];    float f;
     FILE * pFile;
@@ -78,17 +83,25 @@ void test_io(){
     //scanf ("%d",&i);
     /** sscanf: Read formatted data from string  */
     char sentence []="Rudolph is 12 years old"; int i;
-    sscanf (sentence,"%s %*s %d",str,&i);
-    printf ("%s -> %d\n",str,i);
+    sscanf (sentence,"%s %*s %d",str,&i); //%*s means read but ignor
+    printf ("%s -> %d\n",str,i); //Rudolph -> 12
+    char hex[] = "1f1f";
+    sscanf(hex,"%x",&i);
+    printf("sscanf: %x = %d\n",i,i);
     /** sprintf : Write formatted data to string*/ 
     int n, a=5, b=3;
     n=sprintf (str, "%d plus %d is %d", a, b, a+b); //Write formatted data to string
     printf ("[%s] is a string %d chars long\n",str,n);
+    char buffer [100];  
+    n = snprintf ( buffer, 100, "The half of %d is %d", 60, 60/2 );
+    printf("snprintf: %s  & L: %d\n", buffer, n);
+    //Write formatted output to sized buffer
     /**  */ 
 
 }
 
 void test_cstring(){
+    MARK;
     /** cstring */ 
     char myname[] = "I am a string to copy *----* source.\n"; char name[80];
     /** copy  */ 

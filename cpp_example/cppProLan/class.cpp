@@ -12,6 +12,7 @@
 
 using namespace std;
 //using namespace boost; 
+#define MARK (cout << "--------------" <<'('<<__LINE__<<')' << '<' << __FUNCTION__ << '>' <<endl) 
 
 class clist{
     private: int a,b,c;
@@ -113,19 +114,28 @@ struct C
     }
 }; /** 如果有pointer，use deep copy; std::copy() */ 
 
-
+struct D{   int a;    
+    D(int a) :a(a) {}
+    operator int() { return a; } //type convert func
+}; 
 void test_class(){
+    MARK;
     /**  */ 
     Point p1(1,2);
     Point p2(p1);
     Point p3 = p2;
     if(p1 == p3)
         cout << p1 <<" []operator :" << p1[2] <<endl;
-    
+    /** class to Type */ 
+    D a(2);
+    int b = a + 3;
+    D c = a + 4;
+    cout<<"class to int:" << b << "int to class :" << c.a <<endl;
 
 }
 
 void test_constructor(){
+    MARK;
     /**  */
     //clist aa{1,2,3}; //only no use-defined constr
     clist cl(2);

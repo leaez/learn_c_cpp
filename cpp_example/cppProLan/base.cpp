@@ -14,6 +14,9 @@
 
 using namespace std;
 using std::cout; // tell the compiler that cout means std::cout
+#define MARK (cout << "--------------" <<'('<<__LINE__<<')' << '<' << __FUNCTION__ << '>' <<endl) 
+
+#define printx(x) cout << #x " = " << x << '\n'; 
 
 /**  */ 
 template<typename Container, typename Value> 
@@ -93,6 +96,9 @@ int& returnByReference(){
 int basic_test()
 {
     cout << "************* basic test1. :list init/cout/cin; " << endl;
+    printx("789"); //"789" = 789
+    cout << "d:" << __DATE__ << "t:" << __TIME__ <<endl;    //__DATE__  __TIME__ compile date time
+
     using namespace ns_b; 
     int a = 5, b = 6;
     int c(7), d(8);int e{9}, f{10};

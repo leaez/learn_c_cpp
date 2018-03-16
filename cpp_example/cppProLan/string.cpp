@@ -65,7 +65,7 @@ void test_string_alg(){
 
     string s = "but I have heard it works even if you don't believe in it";
     s.replace(0,4,"1"); // erase initial "but "
-    s.replace(s.find("even"),4,"------"); /** 4字符个数 */ 
+    s.replace(s.find("even"),4,"------"); /** 4 char */ 
     s.replace(s.find(" don't"),6,""); // erase by replacing with ""
     /** to c-style string */ 
     cout << const_cast<char*>(s.c_str()) << endl;
