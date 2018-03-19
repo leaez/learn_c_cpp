@@ -33,7 +33,7 @@ SET(MY_SRCS
     #cppProLan/cast.cpp
     #cppProLan/class.cpp
     #cppProLan/inherit.cpp
-    #cppProLan/template.cpp
+    cppProLan/template.cpp
     #cppProLan/exception.cpp
     #cppProLan/move.cpp
     #cppProLan/string.cpp
@@ -42,7 +42,7 @@ SET(MY_SRCS
     #cppProLan/utility.cpp
     #cppProLan/algorithm.cpp
     #cppProLan/regex.cpp
-    cppProLan/thread.cpp
+    #cppProLan/thread.cpp
 
     #cppProLan/clib.c
 

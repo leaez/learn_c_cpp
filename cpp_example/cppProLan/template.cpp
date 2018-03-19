@@ -10,19 +10,23 @@ template< typename T > void g(T*);   // #3: overload for all pointer types
 
 
 template<void (*pf)(int)> struct AF {}; // function
-template<int (pa)[5]> struct S_arr {}; // array
+template<int (&pa)[5]> struct S_arr {}; // array
+template<const int* pci> struct X {};
 
 template<const char*> struct S2 {};
 
+#define MARK (cout << "--------------" <<'('<<__LINE__<<')' << '<' << __FUNCTION__ << '>' <<endl) 
 
 
 void test_template_base(){
+    MARK;
     /** template  */ 
-    constexpr int bt[5] = {1, 3 ,3, 4, 4};
+    int bt[5];// = {1, 3 ,3, 4, 4};
     //S_arr<bt> s_arr; //error : no conversion
+
  
     //S2<"fail"> s2; // error: string literal cannot be used
-    //char okay[] = "okay"; // static object with linkage
+    //constexpr char okay[] = "okay"; // static object with linkage
     //S2< &okay[0] > s2; // error: array element has no linkage
     //S2<okay> s2; // error
 
@@ -45,14 +49,14 @@ template<typename T>void f_cout(T s){
 }
 
 /** multiple parameters */ 
-template<typename... Types> void f2(Types... values){
-   /* for(auto v: values){
-        cout << v ; 
-    }   cout << "\n"; */
+template <typename T> void f_para_pack(T head) {
+    cout << head << ", ";
 }
-template<typename T, typename... Tail> void ff(T head, Tail... tail){ //...indicate the rest
-    g(head); /*  do something to head */ 
-    f(tail...); }// try again with tail
+template<typename T, typename... Tail> void f_para_pack(T head, Tail... tail){ //...indicate the rest
+    cout <<  head << ", " ;
+    f_para_pack(tail...);  cout <<endl;
+}// try again with tail
+
 
 template<int I, int J, typename T> struct X5 { 
     T i = 55;
@@ -64,7 +68,7 @@ int print_a(int a){
     return a;}
 
 void test_template(){
-    cout << "\n----- test_template " <<endl;
+    MARK;
     //W<b> w; // eror: no conversion
     //int * pai = const_cast<int * >(arr);
     /** passing real parameter */ 
@@ -76,7 +80,9 @@ void test_template(){
     f_cout(12); 
     void (*ptr)(std::string) = f_cout; // instantiates f_cout<string>(string)
     ptr("func ptr called");
-   
+
+    f_para_pack(12.0, "string", 122);
+
     X5<2,3,int> x5; /** digital as para */ 
     x5.f(852);
  
@@ -89,7 +95,7 @@ const T& get_max(const T& x, const T& y){
     return (x > y) ? x : y;}
 
 void test_template_func(){
-    cout << "\n----- test_function_template " <<endl;
+    MARK;
     int i = get_max<int>(3, 7); // calls max(int, int)
     double d = get_max(6.34, 18.523); // calls max(double, double)
 }
@@ -116,7 +122,7 @@ public:
 };
 
 void test_template_class(){
-    cout << "\n----- test_function_class" <<endl;
+    MARK;
     Array<int,10> intArray(12); intArray[10] = 11;
 	Array<double,10> doubleArray(12); doubleArray[10] = 12.12; //instantiate template Array<double>
     cout << "intArray: "<< intArray[10] << ";  doubleArray:" << doubleArray[10] <<endl; 
