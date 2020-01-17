@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.6)
+cmake_minimum_required(VERSION 2.8)
  
 Project(cpp_example)
 #SET(CMAKE_CXX_COMPILER "g++-4.9")
@@ -22,30 +22,28 @@ INCLUDE_DIRECTORIES(
 )
 
 SET(MY_SRCS  
+    #cppProLan/base.cpp
+    #cppProLan/cast.cpp
+    #cppProLan/class.cpp
+    #cppProLan/inherit.cpp
+    #cppProLan/template.cpp
+    #cppProLan/exception.cpp
+    #cppProLan/move.cpp
+    
+    #stl/string.cpp
+    #stl/container.cpp
+    #stl/numeric.cpp
+    #stl/utility.cpp
+    #stl/algorithm.cpp
+    stl/regex.cpp
+    #stl/thread.cpp
+
     #boost_src/alg_string.cpp
     #boost_src/cast.cpp
     #boost_src/base.cpp
     #boost_src/boost1.cpp
     #boost_src/smartptr.cpp
     #boost_src/asio.cpp
-    
-    #cppProLan/base.cpp
-    #cppProLan/cast.cpp
-    #cppProLan/class.cpp
-    #cppProLan/inherit.cpp
-    cppProLan/template.cpp
-    #cppProLan/exception.cpp
-    #cppProLan/move.cpp
-    #cppProLan/string.cpp
-    #cppProLan/container.cpp
-    #cppProLan/numeric.cpp
-    #cppProLan/utility.cpp
-    #cppProLan/algorithm.cpp
-    #cppProLan/regex.cpp
-    #cppProLan/thread.cpp
-
-    #cppProLan/clib.c
-
 )
 
 ADD_EXECUTABLE(cpp_example ${MY_SRCS})
@@ -55,6 +53,5 @@ target_link_libraries(cpp_example
     #boost_regex
     boost_system
     boost_thread
-    boost_timer
     )
 #target_link_libraries (cpp_example ${CMAKE_THREAD_LIBS_INIT})

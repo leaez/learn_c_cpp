@@ -12,6 +12,7 @@
 
 using namespace std;
 //using namespace boost; 
+
 #define MARK (cout << "--------------" <<'('<<__LINE__<<')' << '<' << __FUNCTION__ << '>' <<endl) 
 
 class clist{
@@ -118,6 +119,8 @@ struct D{   int a;
     D(int a) :a(a) {}
     operator int() { return a; } //type convert func
 }; 
+
+/**  */ 
 void test_class(){
     MARK;
     /**  */ 

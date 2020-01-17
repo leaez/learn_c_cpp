@@ -1,5 +1,6 @@
 #include <iostream>
 #include <cassert>
+#include <cmath>
 #include <array>
 #include <map>
 #include <tuple>
@@ -92,7 +93,7 @@ int& returnByReference(){
      static int x = 5; /** return ref must not destroy!! */ 
      return x;}
 
-
+/**  */ 
 int basic_test()
 {
     cout << "************* basic test1. :list init/cout/cin; " << endl;
