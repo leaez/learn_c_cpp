@@ -34,8 +34,8 @@ SET(MY_SRCS
     #stl/container.cpp
     #stl/numeric.cpp
     #stl/utility.cpp
-    #stl/algorithm.cpp
-    stl/regex.cpp
+    stl/algorithm.cpp
+    #stl/regex.cpp
     #stl/thread.cpp
 
     #boost_src/alg_string.cpp

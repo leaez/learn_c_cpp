@@ -30,10 +30,12 @@ using namespace std;
 void test_regex(){
     MARK;
 #if 1
-    try { //only gcc 4.9 or above for regex
+    regex pat ("(\\w{4})(\\s{1})(\\w{4})?");
+   /* try { //only gcc 4.9 or above for regex
         regex pat ("(\\w{4})(\\s{1})(\\w{4})?");  
     } catch (const std::regex_error& e) {
         cout << "e catch :" << e.what() << endl;}
+        */
     string rs = "AAaa 123456-45678";
     smatch m;
     regex_search(rs,m,pat);
@@ -41,6 +43,16 @@ void test_regex(){
     cout << m[0].matched << m[0] << '\n'; // true: we found a match
     cout << m[1] << m[1].matched << '\n'; // true: there was a first sub_match
     cout << m[2] << m[2].matched << '\n'; // true: there was a first sub_match
+
+    regex color_regex("#([a-f0-9]{2})""([a-f0-9]{2})""([a-f0-9]{2})");  
+    smatch color_match;  
+    string line = {"Roses are #ff0000 xxx"};
+    if(regex_search(line, color_match, color_regex)) {
+      cout << "Prefix:'" << color_match.prefix() << "'\n";
+      for (size_t i = 0; i < color_match.size(); ++i) 
+        cout << i << ": " << color_match[i] << '\n';
+      cout << "Suffix: '" << color_match.suffix() << "\'\n\n";
+    }
 #endif 
 }
 
@@ -73,13 +85,17 @@ void test_reg0()
 }
 
 /** regex_replace */ 
-void test_reg1()
+void test_replace()
 {
     MARK;
     string input {"x 1 y2 22 zaq 34567"};
     regex pat {"(\\w+)\\s(\\d+)"}; // word space number
     string format {"{$1,$2}\n"};
     cout << regex_replace(input,pat,format);
+
+  string text = "Quick brown fox";   regex vowel_re("a|e|i|o|u"); //例子
+    regex_replace(ostreambuf_iterator<char>(cout),text.begin(), text.end(), vowel_re, "*");
+    cout << '\n' << regex_replace(text, vowel_re, "[$&]") << '\n';
 }
 
 /** sregex_iterator */ 
@@ -132,7 +148,7 @@ int main()
     //test_reg0();
 
     /** replace */ 
-    //test_reg1();
+    test_replace();
     /** iterator */ 
     //test_reg2();
 #endif

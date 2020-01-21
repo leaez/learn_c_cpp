@@ -41,6 +41,7 @@ void test_init_list(){
 }
 
 
+/**  */ 
 void signal_handler(int signal) {
     if (signal == SIGABRT) {
         cerr << "SIGABRT received\n";
@@ -51,36 +52,35 @@ void signal_handler(int signal) {
     //_Exit(EXIT_FAILURE);
     //exit(EXIT_FAILURE);
 }
-
-/**  */ 
 void test_signal(){
     printf("-------------signal \n");
     auto previous_handler = signal(SIGABRT, signal_handler);
     auto previous_handler1 = signal(SIGTERM, signal_handler);
-    raise(SIGTERM);
-    abort();  // Raise SIGABRT
+    //raise(SIGTERM);
+    //abort();  // Raise SIGABRT
 
 }
 
+
+/**  */ 
 void f(int n1, int n2, int n3, const int& n4, int n5){
     cout <<"f called: "<< n1 << ' ' << n2 << ' ' << n3 << ' ' << n4 << ' ' << n5 << '\n';
 }
 int g(int n1){
-    return n1;
+    return ++n1;
 }
 struct Foo {
     int data;
     Foo(int num = 10) : data(num) {}
     void print_sum(int n2)  {
-        cout << "sum" << data+n2 << '\n';
+        cout << "sum:" << data+n2 << '\n';
     }
 };
 struct func_obj{
     int operator()(int a, int b){   
-        cout <<"func obj:" << a+b <<endl; 
+        cout <<"(func obj:" << a+b << ")"; 
         return a + b;   } 
 };
-/**  */ 
 
 void test_bind(){
     printf("-------------bind\n");
@@ -91,8 +91,8 @@ void test_bind(){
     n = 10;
     f1(1, 2);
     // nested bind subexpressions share the placeholders
-    auto f2 = bind(f, _3, bind(g, _3), _3, 4, 5);
-    f2(10, 11, 12); // makes a call to f(12, g(12), 12, 4, 5)
+    auto f2 = bind(f, _3, bind(g, _2), _3, 4, 5);
+    f2(10, 11, 12); // makes a call to f(12, g(11), 12, 4, 5)
     // bind to a pointer to member function
 //2. bind to class member
     Foo foo;
@@ -100,7 +100,7 @@ void test_bind(){
     f3(5);
     // bind to a pointer to data member
     auto f4 = bind(&Foo::data, _1);
-    cout << f4(foo) << '\n';
+    cout << "data:"<< f4(foo) << '\n';
 
 //3. bind to fun obj
     cout << "call func obj:" <<bind(func_obj(), _1, _2)(10,20)<<endl; //<int> is return type
@@ -115,7 +115,7 @@ void test_bind(){
 void print_num(int i) { cout << i << '\n'; }
 
 void test_function(){
-    printf("-------------bind\n");
+    printf("------------function\n");
 //1. func/ lambda/ bind    
     //store func
     function<void(int)> f_display = print_num;
@@ -157,7 +157,7 @@ tuple<double, char, string> get_student(int id){
 }
 
 void test_pair_tuple(){
-    printf("-----------pair--tuple \n");
+    printf("\n-----------pair--tuple \n");
     /** pair  */ 
     auto p = make_pair(1, 3.14);
     cout << '(' << get<0>(p) << ", " << get<1>(p) << ")\n";
@@ -228,7 +228,7 @@ bool is_prime (int x) {
   return true;
 }
 
-void test_functional()
+void test_future()
 {
   // call function asynchronously:
     printf("-------------functional \n");
@@ -296,7 +296,7 @@ int main()
     test_pair_tuple();
     test_move_forward();
     /**  */ 
-    test_functional();
+    test_future();
     /**  */ 
     test_time();
     /**  */ 

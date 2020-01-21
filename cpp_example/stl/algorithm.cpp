@@ -45,18 +45,21 @@ void test_sequantial_access(){
     cout << "count if:" << count_if(v.begin(), v.end(), [](int i){ return i % 2 == 0; })<< endl;
     /** find */
     auto result1 = std::find(std::begin(v), std::end(v), 3);
-    if (result1 != std::end(v)) {  std::cout << "v contains: " << 3 << '\n';}
+    if (result1 != std::end(v)) {  std::cout << "v contains: " << *result1 << '\n';}
+    
     std::vector<int> t1{1, 2, 3};
     auto result2 = std::find_end(v.begin(), v.end(), t1.begin(), t1.end());
     if (result2 != v.end()) {   std::cout << "subsequence found\n";}
+    
     auto result3 = std::adjacent_find(v1.begin(), v1.end());
     if (result3 != v1.end()) { std::cout << "matching adjacent elements\n";}
+    
     /** search  */ 
     string cont{"fsdfs456789dfds"};
     string ss{"456789"};
     auto serch = search(cont.begin(), cont.end(), ss.begin(), ss.end());
     if(serch != cont.end())
-        cout << "search get elements"<< serch-cont.end() <<"\n";
+        cout << "search get elements:"<< serch-cont.end() <<"\n";
     if (binary_search(v.begin(), v.end(), 3)){/**if an element exists in a certain range   */ 
         cout << "got 3 "<<endl; }
 
@@ -72,14 +75,14 @@ void test_sequantial_modify(){
     std::iota(from_v.begin(), from_v.end(), 22);
     copy(sr.cbegin(), sr.cend(), ostream_iterator<int>(cout, " ")); //only print
     cout << '\n';
-    copy(from_v.begin(),from_v.end(), back_inserter(to_v)); printv(to_v);
+    copy(from_v.begin(),from_v.end(), back_inserter(to_v));cout<<"copy:"; printv(to_v);
     copy_n(from_v.begin(), 4, back_inserter(to_v));  printv(to_v); //copy 4 elements
     copy_backward(from_v.begin(), from_v.end(), to_v.end()); printv(to_v); // in backwards order 
     move_backward(from_v.begin(), from_v.end(), to_v.end()); printv(to_v); // in backwards order 
     printv(from_v);
 
     /**fill */
-    fill(from_v.begin(),from_v.end(), 11); printv(from_v);
+    fill(from_v.begin(),from_v.end(), 11);cout<<"fill:"; printv(from_v);
     fill_n(from_v.begin(), 5, 22);  printv(from_v);
 
     /** transform generate */ 
@@ -89,7 +92,7 @@ void test_sequantial_modify(){
     cout <<st;
     //assigns the results of successive function 
     int n=2; 
-    generate(from_v.begin(), from_v.end(), [&n]{n++; return n*n; }); printv(from_v);
+    generate(from_v.begin(), from_v.end(), [&n]{n++; return n*n; });cout<<"generate:"; printv(from_v);
     generate_n(from_v.begin(), 5, [n = 0] () mutable { return n++; }); printv(from_v);
     /** remove */ 
     string str1 = "Text with Some   Upaces12456789\n";
@@ -97,22 +100,22 @@ void test_sequantial_modify(){
     str1.erase(std::remove(str1.begin(), str1.end(), ' '), str1.end()); //erase make str short because of remove
     cout <<str1 ;
     str1.erase(remove_if(str1.begin(),str1.end(),[](unsigned char x){return std::isupper(x);}),str1.end());
-    cout <<str1 ;
+    cout <<"after remove_if:" << str1 ;
     string str2 = "Text with some   spaces\n";
-    remove_copy(str2.begin(), str2.end(),std::ostream_iterator<char>(std::cout), ' ');
+    remove_copy(str2.begin(), str2.end(),std::ostream_iterator<char>(std::cout), ' ');//remove ' '
     /** replace */ 
-    replace(sr.begin(), sr.end(), 8, 88); printv(sr);
-    replace_if(sr.begin(), sr.end(),bind(less<int>(), _1, 5), 55); printv(sr);
+    replace(sr.begin(), sr.end(), 8, 88);cout<<"replace:"; printv(sr); //8->88
+    replace_if(sr.begin(), sr.end(),bind(less<int>(), _1, 5), 55); printv(sr); // <5 -> 55
     replace_copy_if(sr.begin(), sr.end(),std::ostream_iterator<int>(std::cout, " "), //if / then copy
-        [](int n){return n > 9;}, 99); cout <<endl;
+        [](int n){return n > 9;}, 99); cout <<endl; //if >9 -> 99 
     /** reverse */ 
     reverse(begin(sr), end(sr)); printv(sr);
-    reverse_copy(begin(sr), end(sr), to_v.begin()); printv(to_v);
+    reverse_copy(begin(sr), end(sr), to_v.begin());cout<<"reverse:"; printv(to_v); //copy from end
     /** rotate */ 
-    rotate(sr.begin(), sr.begin() + 1, sr.end());   printv(sr);//rotate left
+    rotate(sr.begin(), sr.begin() + 1, sr.end());   cout<<"rotate:";printv(sr);//rotate left
     rotate(sr.rbegin(), sr.rbegin() + 1, sr.rend());printv(sr); //rotate right 
     /** unique */ 
-    auto last = unique(sr.begin(), sr.end()); printv(sr); //delete adjecent element;
+    auto last = unique(sr.begin(), sr.end()); printf("unique:");printv(sr); //delete adjecent same element ;
     //sr.erase(last,sr.end());
     string s1 = "The      string    with many       spaces!";
     string s2;
@@ -158,8 +161,8 @@ void test_sort(){
     partial_sort(s.begin(), s.begin() + 3, s.end());
     printv(s);
     vector<int> v{5, 6, 4, 3, 2, 6, 7, 9, 3};
-    std::nth_element(v.begin(), v.begin() + v.size()/2, v.end()); /** nth = v.size()/2, */ 
-    printv(v); /** after sort : before nth will smaller than nth; after nth will bigger than nth */ 
+    std::nth_element(v.begin(), v.begin() + v.size()/2, v.end()); /** nth = v.size()/2,  */ 
+    cout<<"atter nth:";printv(v); /** after sort : before nth will smaller than nth; after nth will bigger than nth */ 
     std::nth_element(v.begin(), v.begin()+1, v.end(), std::greater<int>());
     std::cout << "The second largest element is " << v[1] << '\n';
     printv(v);
@@ -167,10 +170,10 @@ void test_sort(){
     /**  */ 
     std::vector<int> v1 = {1, 2, 3, 4, 5}; 
     std::vector<int> v2 = {3, 4, 5, 6, 7}; 
-    cout << includes(v1.begin(),v1.end(),v2.begin(),v2.end()) <<endl; // v1 &&v2  must sorted range
+    cout <<"include:" << includes(v1.begin(),v1.end(),v2.begin(),v2.end()) <<endl; // v1 &&v2  must sorted range
     vector<int> dest1;
     set_union(v1.begin(), v1.end(),v2.begin(), v2.end(),std::back_inserter(dest1));//v1 &&v2  must sorted range
-    printv(dest1);
+    cout<<"union:"; printv(dest1);
 
 
 }
@@ -205,7 +208,7 @@ void test_numeric(){
 
     adjacent_difference(v.begin(), v.end(), v.begin()); //
     printv(v);
-    partial_sum(v.cbegin(), v.cend(), v.begin()); //
+    partial_sum(v.cbegin(), v.cend(), v.begin()); // add previous
     printv(v);
     
         

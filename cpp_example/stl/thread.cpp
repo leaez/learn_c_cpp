@@ -2,6 +2,7 @@
 #include <array>
 #include <map>
 #include <tuple>
+#include <numeric>
 #include <vector>
 #include <queue>
 #include <cstddef>
@@ -12,6 +13,7 @@
 #include <mutex>
 #include <chrono>
 #include <future>
+#include <cmath>
 
 using namespace std;
 
@@ -98,7 +100,9 @@ void test_lock_guard(){
 
 }
 
-/**  */ 
+
+
+/** condition_variable  */ 
 bool ready = false;
 queue<int> mqueue; // the queue of messages
 condition_variable mcond; // the variable communicating events
@@ -114,8 +118,10 @@ void consumer(int n){ /** 1. lock; 2, wait 3,wakeup(timespire/notified) */
         //mcond.wait(lck,[](){return ready;});// same as above
         //mcond.wait(lck, [](){return (mqueue.size()>0);});//same with: while()m.wait(lck);
         mcond.wait_for(lck,chrono::microseconds(100), [](){return (mqueue.size()>0);});//same with: while()m.wait(lck);
-        int a; a = mqueue.front(); // get the message
-        mqueue.pop();
+        int a; 
+        a = mqueue.front(); // get the message
+        if(!mqueue.empty()) mqueue.pop();
+        if(!mqueue.empty()) mqueue.pop();
         cout <<n<< ". consumer processed data : " << a << ", queue size: " << mqueue.size() << endl;
         ready = false;    
     }//every loop end  unlock mmutex (unique_lock beyond scope)
@@ -167,6 +173,7 @@ bool is_prime (int x) {
 int f(int x, int y) { sleep(2);return std::pow(x,y); }
  
 void test_promise_future(){
+    MARK;
   // using promise<int> to transmit a result between threads.
     std::vector<int> numbers = { 1, 2, 3, 4, 5, 6 };
     std::promise<int> accumulate_promise;
@@ -174,21 +181,21 @@ void test_promise_future(){
     std::thread work_thread(acc, numbers.begin(), numbers.end(),
                             move(accumulate_promise)); //can not copy
     accumulate_future.wait();  // wait for result
-    std::cout << "result=" << accumulate_future.get() << '\n';
+    std::cout << "accumulate result=" << accumulate_future.get() << '\n';
     work_thread.join();  // wait for thread completion
-
+  cout << "-----------------\n";
  /** future */ 
     // 1. future from a packaged_task
-    std::packaged_task<int()> task([]{ sleep(2);cout << "I'm packaged_task \n"; return 7; }); // wrap the function
+    std::packaged_task<int()> task([]{ sleep(2);cout << "   I'm packaged_task 7 \n"; return 7; }); // wrap the function
     std::future<int> f1 = task.get_future();  // get a future
     std::thread t(std::move(task)); // launch on a thread
     // 2. future from an async() //a new thread is launched to execute 
     std::future<int> f2 = std::async(std::launch::async, []{sleep(1);
-            cout << "I'm async\n"; return 8; });
+            cout << "   I'm async 8\n"; return 8; });
     // 3. future from a promise
     std::promise<int> p;
     std::future<int> f3 = p.get_future();
-    std::thread( [&p]{sleep(3);cout <<" I'm promise \n"; 
+    std::thread( [&p]{sleep(3);cout <<" I'm thread promise  9 \n"; 
             p.set_value(9); }).detach();//make thread independently. resources will be freed once thread exits. 
  
     std::cout << "Waiting..." << std::flush;
@@ -196,15 +203,17 @@ void test_promise_future(){
     //f2.wait(); //got also wait , some time can be ignored
     //f3.wait();
     f1.wait(); f2.wait(); f3.wait(); //here 3 thread got done
-    std::cout << "Got Results are: " //f.get()//waits until the future has a valid * retrieves it
+    std::cout << "after 3 thread done,  Got Results are: " //f.get()//waits until the future has a valid * retrieves it
               << f1.get() << ' ' << f2.get() << ' ' << f3.get() << '\n';
     t.join();
 
+  cout << "-----------------\n";
   /** async */  //runs a function asynchronously
     std::future<bool> fut = std::async (is_prime,313222313);
     bool ret = fut.get();  //wait result
     cout <<"prime result:" << ret <<endl;
 
+  cout << "-----------------\n";
   /** packaged_task */ //packages a function to store its return value
     std::packaged_task<int()> task1(std::bind(f, 2, 11));
     std::future<int> ftask1 = task1.get_future();

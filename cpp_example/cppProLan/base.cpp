@@ -106,24 +106,15 @@ int basic_test()
     std::cout << "v type:" << typeid(a + b).name()<< endl;
     double vd = 5.0;
     std::cout<<"double size:" << sizeof(vd) << endl;
+    
     using distance_t = double; /** c++11 */ /** typedef double distance_t; */  
+    
+    /** rand */ 
     srand(5); // set initial seed value to 5323  only called one time;
     for (int count=0; count < 5; ++count) 
         std::cout << rand() << "\t"; /**  0 and RAND_MAX */ 
     static_assert(sizeof(long) == 8, "long must be 8 bytes"); //while compile
 
-    /** array */ 
-    int array[] = { 13, 1, 21, 3, 5, 8, 1, 2 };  // initializer list
-    int *array2 = new int[5] { 5, 4, 3, 2, 1 };
-    std::cout << "The array has: " << sizeof(array) / sizeof(array[0]) << "elements\n";
-    std::sort(array, array+8);
-    for(auto i:array){cout << i << " ";} /** c++ 11 */ 
-
-    int ar2d1[2][2] = {{1, 2}, {3, 4}};
-    std::array<int, 3> std_ar1 = {1, 2, 3};
-    std::string ars[] = {std::string("one"), // copy-initialization
-                         "two",              // conversion, then copy-initialization
-                         {'t', 'h', 'r', 'e', 'e'} }; // list-initialization
     /** struct list-initialize  */ 
     S_for_init s1 = { 1, { 2, 3, {4, 5, 6} } }; /** only C++11  */ 
     s1 = { 7, { 2, 3, {4, 5, 6} } }; /** only C++11  */ 
@@ -244,11 +235,12 @@ void test_lambda_func()
 
     int x = 5;
     std::vector<int> c = {1, 2, 3, 4, 5, 6, 7};
-    c.erase(std::remove_if(c.begin(), c.end(), [x](int n) {return n < x; }), /**lambda as judge  */ 
-            c.end());
+    c.erase(std::remove_if(c.begin(), c.end(), [x](int n) {return n < x; }), c.end());/**lambda as judge  */ 
+            
     std::for_each(c.begin(), c.end(), [](int i){ 
         std::cout << i<< '/'; });
     std::cout << '\n';
+    
     std::function<int(int)> func2 = [](int i) { /** lambda to func name */ 
         return i + 4; };
     std::cout << "lambda func2: " << func2(6) << '\n';

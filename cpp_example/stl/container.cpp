@@ -95,6 +95,19 @@ void test_array(){
     as.fill("fill");
     printv(as);
 
+    /** array  */ 
+    int array1[] = { 13, 1, 21, 3, 5, 8, 1, 2 };  // initializer list
+    int *array2 = new int[5] { 5, 4, 3, 2, 1 };
+    std::cout << "The array has: " << sizeof(array1) / sizeof(array1[0]) << "elements\n";
+    std::sort(array1, array1+8);
+    for(auto i:array1){cout << i << " ";} /** c++ 11 */ 
+
+    int ar2d1[2][2] = {{1, 2}, {3, 4}};
+    std::array<int, 3> std_ar1 = {1, 2, 3};
+    std::string ars[] = {std::string("one"), // copy-initialization
+                         "two",              // conversion, then copy-initialization
+                         {'t', 'h', 'r', 'e', 'e'} }; // list-initialization
+
     
 }
 
