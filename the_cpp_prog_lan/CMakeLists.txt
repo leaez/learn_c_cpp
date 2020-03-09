@@ -22,7 +22,12 @@ INCLUDE_DIRECTORIES(
 )
 
 SET(MY_SRCS  
-    basic/base.cpp
+  #basic/base.cpp
+  #basic/class.cpp
+  #stl/basic.cpp
+  #stl/algorithms.cpp
+  #stl/resource.cpp
+  stl/utilities.cpp
  
 )
 
