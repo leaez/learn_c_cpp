@@ -27,7 +27,12 @@ SET(MY_SRCS
   #stl/basic.cpp
   #stl/algorithms.cpp
   #stl/resource.cpp
-  stl/utilities.cpp
+  #stl/utilities.cpp
+  #stl/string.cpp
+  #stl/regex.cpp
+  #stl/io.cpp
+  #stl/numeric.cpp
+  stl/thread.cpp
  
 )
 
